@@ -1,132 +1,110 @@
 const fetchDreams = async () => {
-  const endpoint = "https://cobudget.com/api";
-  const query = `
-      query Buckets($groupSlug: String, $roundSlug: String!, $offset: Int, $limit: Int, $status: [StatusType!]) { 
-        bucketsPage(
-          groupSlug: $groupSlug
-          roundSlug: $roundSlug
-          offset: $offset
-          limit: $limit
-          status: $status
-        ) {
-          buckets {
-            id
-            title
-            description
-            summary
-            noOfFunders
-            totalContributions
-            totalContributionsFromCurrentMember
-            noOfComments
-            status
-            percentageFunded
-            minGoal
-            maxGoal
-            images {
-              large
-            }
-            customFields {
-              value
-              customField {
-                id
-                name
-                type
-                limit
-                description
-                isRequired
-                position
-                createdAt
+  const response = await fetch("https://cobudget.com/api", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: `
+        query Buckets($groupSlug: String, $roundSlug: String!, $offset: Int, $limit: Int, $status: [StatusType!]) { 
+          bucketsPage(
+            groupSlug: $groupSlug
+            roundSlug: $roundSlug
+            offset: $offset
+            limit: $limit
+            status: $status
+          ) {
+            buckets {
+              id
+              title
+              summary
+              noOfFunders
+              noOfComments
+              percentageFunded
+              minGoal
+              maxGoal
+              images { large }
+              customFields {
+                value
+                customField { name }
               }
             }
           }
         }
-      }
-    `;
-
-  const variables = {
-    groupSlug: "borderland",
-    roundSlug: "borderland-dreams-2025",
-    offset: 0,
-    limit: 6,
-    status: ["OPEN_FOR_FUNDING"],
-  };
-
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+      `,
+      variables: {
+        groupSlug: "borderland",
+        roundSlug: "borderland-dreams-2025",
+        offset: 0,
+        limit: 6,
+        status: ["OPEN_FOR_FUNDING"],
       },
-      body: JSON.stringify({ query, variables }),
-    });
+    }),
+  });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+  const { data } = await response.json();
+  const buckets = data?.bucketsPage?.buckets || [];
+  console.log(buckets);
 
-    const data = await response.json();
+  const loadingEl = document.querySelector(".loading");
+  if (!buckets.length) {
+    loadingEl.textContent = "No buckets found.";
+    return;
+  }
 
-    if (data.errors) {
-      console.error("GraphQL Error:", data.errors);
-      return;
-    }
+  const fragment = document.createDocumentFragment();
 
-    const buckets = data.data.bucketsPage.buckets;
-    console.log(buckets);
-
-    if (!buckets || buckets.length === 0) {
-      document.querySelector(".loading").textContent = "No buckets found.";
-      return;
-    }
-
-    const fragment = document.createDocumentFragment();
-
-    buckets.forEach((bucket) => {
+  buckets.forEach(
+    ({
+      title,
+      summary,
+      noOfFunders,
+      noOfComments,
+      percentageFunded,
+      minGoal,
+      maxGoal,
+      images,
+      customFields,
+    }) => {
       const bucketDiv = document.createElement("div");
       bucketDiv.className = "bucket";
 
-      // Generate custom field HTML
-      const customFieldsHTML = bucket.customFields
-        .map((cf) => {
-          const fieldName = cf.customField?.name || "Unnamed Field";
-          const value = cf.value || "N/A";
-          return `<p><strong>${fieldName}:</strong> ${value}</p>`;
-        })
+      const customFieldsHTML = customFields
+        .map(
+          ({ customField, value }) =>
+            `<p><strong>${customField?.name || "Unnamed Field"}:</strong> ${
+              value || "N/A"
+            }</p>`
+        )
         .join("");
 
+      const imagesHTML = images?.length
+        ? images
+            .map(
+              (img) =>
+                `<img src="${img.large}" alt="${title} image" style="max-width: 100%; height: auto;" />`
+            )
+            .join("")
+        : "<p>No images available.</p>";
+
       bucketDiv.innerHTML = `
-          <h3>${bucket.title}</h3>
-          <p><strong>Summary:</strong> ${bucket.summary || "N/A"}</p>
-          <p><strong>No. of Funders:</strong> ${bucket.noOfFunders}</p>
-          <p><strong>No. of Comments:</strong> ${bucket.noOfComments}</p>
-          <p><strong>Percentage Funded:</strong> ${bucket.percentageFunded}%</p>
-          <p><strong>Minimum Goal:</strong> ${bucket.minGoal}</p>
-          <p><strong>Maximum Goal:</strong> ${bucket.maxGoal}</p>
-          ${
-            bucket.images && bucket.images.length > 0
-              ? bucket.images
-                  .map(
-                    (image) =>
-                      `<img src="${image.large}" alt="${bucket.title} image" style="max-width: 100%; height: auto;" />`
-                  )
-                  .join("")
-              : "<p>No images available.</p>"
-          }
-          <div class="custom-fields">
-            ${customFieldsHTML || "<p>No custom fields found.</p>"}
-          </div>
-        `;
+      <h3>${title}</h3>
+      <p><strong>Summary:</strong> ${summary || "N/A"}</p>
+      <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
+      <p><strong>No. of Comments:</strong> ${noOfComments}</p>
+      <p><strong>Percentage Funded:</strong> ${percentageFunded}%</p>
+      <p><strong>Minimum Goal:</strong> ${minGoal}</p>
+      <p><strong>Maximum Goal:</strong> ${maxGoal}</p>
+      ${imagesHTML}
+      <div class="custom-fields">${
+        customFieldsHTML || "<p>No custom fields found.</p>"
+      }</div>
+    `;
 
       fragment.appendChild(bucketDiv);
-    });
+    }
+  );
 
-    document.getElementById("buckets-list").appendChild(fragment);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    document.querySelector(".loading").textContent = "Error fetching data.";
-  } finally {
-    document.querySelector(".loading").style.display = "none";
-  }
+  document.getElementById("buckets-list").appendChild(fragment);
+  loadingEl.style.display = "none";
 };
 
 window.onload = fetchDreams;
