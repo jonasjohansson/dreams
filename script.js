@@ -20,6 +20,7 @@ const renderBuckets = (bucketsToRender) => {
         noOfFunders,
         noOfComments,
         percentageFunded,
+        income,
         minGoal,
         maxGoal,
         images,
@@ -53,6 +54,12 @@ const renderBuckets = (bucketsToRender) => {
       title = removeEmojis(title);
       summary = removeEmojis(summary);
 
+      income = income / 100;
+      minGoal = minGoal / 100;
+      maxGoal = maxGoal / 100;
+      funded = Math.round(minGoal * (percentageFunded / 100) - income);
+      const percentageFunded2 = ((funded / minGoal) * 100).toFixed(2);
+
       bucketDiv.innerHTML = `
       <header>
         <h3><a href="${urlBase}/${id}">${title}</a></h3>
@@ -78,11 +85,10 @@ const renderBuckets = (bucketsToRender) => {
         </p>
 
         <div class="progress-bar-container">
-          <p><strong>Percentage Funded:</strong></p>
           <div class="progress-bar">
-            <div class="progress" style="width: ${percentageFunded}%"></div>
+            <div class="progress" style="width: ${percentageFunded2}%"></div>
           </div>
-          <p>${percentageFunded}%</p>
+          <p>${percentageFunded2}%</p>
         </div>
 
         <div class="goals">
