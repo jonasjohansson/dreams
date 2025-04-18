@@ -8,26 +8,30 @@ let allBuckets = []; // Store all fetched buckets globally
 
 const renderBuckets = (bucketsToRender) => {
   const list = document.getElementById("buckets-list");
-  list.innerHTML = ""; // Clear previous entries
-
   const urlBase = "https://cobudget.com/borderland/borderland-dreams-2025";
   const fragment = document.createDocumentFragment();
 
   bucketsToRender.forEach(
-    ({
-      id,
-      title,
-      summary,
-      noOfFunders,
-      noOfComments,
-      percentageFunded,
-      minGoal,
-      maxGoal,
-      images,
-      customFields,
-    }) => {
+    (
+      {
+        id,
+        title,
+        summary,
+        noOfFunders,
+        noOfComments,
+        percentageFunded,
+        minGoal,
+        maxGoal,
+        images,
+        customFields,
+      },
+      index
+    ) => {
       const bucketDiv = document.createElement("div");
       bucketDiv.className = "bucket";
+      bucketDiv.style.opacity = 0;
+      bucketDiv.style.transition = "opacity 0.6s ease";
+      bucketDiv.style.transitionDelay = `${index * 50}ms`;
 
       const customFieldsHTML = customFields
         .map(
@@ -62,12 +66,17 @@ const renderBuckets = (bucketsToRender) => {
       `;
 
       fragment.appendChild(bucketDiv);
+
+      // Trigger fade-in
+      setTimeout(() => {
+        bucketDiv.style.opacity = 1;
+      }, 50 * index);
     }
   );
 
   list.appendChild(fragment);
 
-  handleSearch();
+  handleSearch(); // So search applies to new elements
 };
 
 const fetchDreams = async () => {
@@ -133,17 +142,19 @@ const fetchDreams = async () => {
     return;
   }
 
+  // Only append new buckets (buckets fetched on this call)
   allBuckets.push(...buckets); // Add to global array
-  renderBuckets(allBuckets); // Initial render
+  renderBuckets(buckets); // Render only the new buckets
 
   offset += limit;
-  limit += 9;
+  limit += 9; // You can tweak this to adjust the "page size" for each fetch
   isLoading = false;
 
   if (!page.moreExist) {
     allLoaded = true;
     loadingEl.style.display = "none";
   } else {
+    loadingEl.textContent = `Loaded ${offset}/464 dreams`;
     console.log(`More dreams remain. Currently at offset: ${offset}`);
   }
 
