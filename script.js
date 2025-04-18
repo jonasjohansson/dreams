@@ -37,33 +37,61 @@ const renderBuckets = (bucketsToRender) => {
         .map(
           ({ customField, value }) =>
             `<p><strong>${customField?.name || "Unnamed Field"}:</strong> ${
-              value ? marked.parse(value) : "N/A"
+              cleanCustomFieldValue(value)
+                ? marked.parse(cleanCustomFieldValue(value))
+                : "N/A"
             }</p>`
         )
         .join("");
 
-      const imagesHTML = images?.length
-        ? images
-            .map(
-              (img) =>
-                `<img src="${img.small}" alt="${title} image" style="max-width: 100%; height: auto;" />`
-            )
-            .join("")
-        : "<p>No images available.</p>";
+      const coverImage = images[0].small;
+      const imagesHTML =
+        images?.length > 1
+          ? images
+              .slice(1) // Skip the first image
+              .map((img) => `<img src="${img.small}" alt="${title} image" />`)
+              .join("")
+          : "<p>No images available.</p>";
+
+      title = removeEmojis(title);
+      summary = removeEmojis(summary);
 
       bucketDiv.innerHTML = `
-        <h3><a href="${urlBase}/${id}">${title}</a></h3>
-        <p><strong>Summary:</strong> ${summary || "N/A"}</p>
-        <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
-        <p><strong>No. of Comments:</strong> ${noOfComments}</p>
-        <p><strong>Percentage Funded:</strong> ${percentageFunded}%</p>
-        <p><strong>Minimum Goal:</strong> ${minGoal}</p>
-        <p><strong>Maximum Goal:</strong> ${maxGoal}</p>
-        ${imagesHTML}
-        <div class="custom-fields">${
-          customFieldsHTML || "<p>No custom fields found.</p>"
-        }</div>
-      `;
+  <h3><a href="${urlBase}/${id}">${title}</a></h3>
+  <img class="cover" src="${coverImage}">
+  <p><strong>Summary:</strong> ${summary || "N/A"}</p>
+  
+  <p class="funders-comments">
+    <span class="icon funder-icon">💰</span>
+    <span><strong>${noOfFunders}</strong> Funders</span>
+    <span class="icon comment-icon">💬</span>
+    <span><strong>${noOfComments}</strong> Comments</span>
+  </p>
+
+  <!-- Progress Bar for Percentage Funded -->
+  <div class="progress-bar-container">
+    <p><strong>Percentage Funded:</strong></p>
+    <div class="progress-bar">
+      <div class="progress" style="width: ${percentageFunded}%"></div>
+    </div>
+    <p>${percentageFunded}%</p>
+  </div>
+
+  <!-- Minimum and Maximum Goal -->
+  <div class="goals">
+    <div class="goal">
+      <p><strong>Min Goal:</strong> <span>${minGoal}</span></p>
+    </div>
+    <div class="goal">
+      <p><strong>Max Goal:</strong> <span>${maxGoal}</span></p>
+    </div>
+  </div>
+
+  ${imagesHTML}
+  <div class="custom-fields">
+    ${customFieldsHTML || "<p>No custom fields found.</p>"}
+  </div>
+`;
 
       fragment.appendChild(bucketDiv);
 
@@ -172,6 +200,23 @@ function handleSearch(event) {
     bucket.style.display = text.includes(query) ? "block" : "none";
   });
 }
+
+const removeEmojis = (text) => {
+  return text.replace(
+    /[\uD800-\uDFFF]+|[\u2700-\u27BF]+|[\u2300-\u23FF]+|[\u2B50\uFE0F\u00A9\u00AE\u2122]+|[\u0023-\u0039]\u20E3/g,
+    ""
+  );
+};
+
+const cleanCustomFieldValue = (value) => {
+  if (!value) return "N/A"; // Handle empty or undefined values
+
+  // Remove empty paragraphs
+  value = value.replace(/<p>\s*<\/p>/g, "");
+
+  // Remove emojis
+  return removeEmojis(value);
+};
 
 window.onload = () => {
   fetchDreams();
