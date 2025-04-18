@@ -21,6 +21,7 @@ const fetchDreams = async () => {
               percentageFunded
               minGoal
               maxGoal
+              income
               images { large }
               customFields {
                 value
@@ -49,11 +50,13 @@ const fetchDreams = async () => {
     loadingEl.textContent = "No buckets found.";
     return;
   }
+  const url = "https://cobudget.com/borderland/borderland-dreams-2025/";
 
   const fragment = document.createDocumentFragment();
 
   buckets.forEach(
     ({
+      id,
       title,
       summary,
       noOfFunders,
@@ -86,7 +89,7 @@ const fetchDreams = async () => {
         : "<p>No images available.</p>";
 
       bucketDiv.innerHTML = `
-      <h3>${title}</h3>
+      <h3><a href="${url}/${id}">${title}</a></h3>
       <p><strong>Summary:</strong> ${summary || "N/A"}</p>
       <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
       <p><strong>No. of Comments:</strong> ${noOfComments}</p>
