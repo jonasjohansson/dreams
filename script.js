@@ -1,4 +1,12 @@
+let offset = 0;
+const limit = 12;
+let isLoading = false;
+let allLoaded = false;
+
 const fetchDreams = async () => {
+  if (isLoading || allLoaded) return;
+  isLoading = true;
+
   const response = await fetch("https://cobudget.com/api", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -12,6 +20,7 @@ const fetchDreams = async () => {
             limit: $limit
             status: $status
           ) {
+            moreExist
             buckets {
               id
               title
@@ -34,24 +43,30 @@ const fetchDreams = async () => {
       variables: {
         groupSlug: "borderland",
         roundSlug: "borderland-dreams-2025",
-        offset: 0,
-        limit: 6,
+        offset: offset,
+        limit: limit,
         status: ["OPEN_FOR_FUNDING"],
       },
     }),
   });
 
   const { data } = await response.json();
-  const buckets = data?.bucketsPage?.buckets || [];
-  console.log(buckets);
+  const page = data?.bucketsPage;
+  const buckets = page?.buckets || [];
 
   const loadingEl = document.querySelector(".loading");
+
   if (!buckets.length) {
-    loadingEl.textContent = "No buckets found.";
+    if (offset === 0) {
+      loadingEl.textContent = "No buckets found.";
+    } else {
+      loadingEl.textContent = "No more dreams to load.";
+    }
+    allLoaded = true;
     return;
   }
-  const url = "https://cobudget.com/borderland/borderland-dreams-2025/";
 
+  const urlBase = "https://cobudget.com/borderland/borderland-dreams-2025";
   const fragment = document.createDocumentFragment();
 
   buckets.forEach(
@@ -89,25 +104,42 @@ const fetchDreams = async () => {
         : "<p>No images available.</p>";
 
       bucketDiv.innerHTML = `
-      <h3><a href="${url}/${id}">${title}</a></h3>
-      <p><strong>Summary:</strong> ${summary || "N/A"}</p>
-      <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
-      <p><strong>No. of Comments:</strong> ${noOfComments}</p>
-      <p><strong>Percentage Funded:</strong> ${percentageFunded}%</p>
-      <p><strong>Minimum Goal:</strong> ${minGoal}</p>
-      <p><strong>Maximum Goal:</strong> ${maxGoal}</p>
-      ${imagesHTML}
-      <div class="custom-fields">${
-        customFieldsHTML || "<p>No custom fields found.</p>"
-      }</div>
-    `;
+        <h3><a href="${urlBase}/${id}">${title}</a></h3>
+        <p><strong>Summary:</strong> ${summary || "N/A"}</p>
+        <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
+        <p><strong>No. of Comments:</strong> ${noOfComments}</p>
+        <p><strong>Percentage Funded:</strong> ${percentageFunded}%</p>
+        <p><strong>Minimum Goal:</strong> ${minGoal}</p>
+        <p><strong>Maximum Goal:</strong> ${maxGoal}</p>
+        ${imagesHTML}
+        <div class="custom-fields">${
+          customFieldsHTML || "<p>No custom fields found.</p>"
+        }</div>
+      `;
 
       fragment.appendChild(bucketDiv);
     }
   );
 
-  document.getElementById("buckets-list").appendChild(fragment);
+  // Append the fragment correctly to the list
+  const bucketsList = document.getElementById("buckets-list");
+  bucketsList.appendChild(fragment);
+
   loadingEl.style.display = "none";
+
+  offset += limit;
+  isLoading = false;
+
+  if (!page.moreExist) {
+    allLoaded = true;
+  }
+
+  // Fetch the next batch if there are more items available
+  if (page.moreExist && !allLoaded) {
+    fetchDreams();
+  }
 };
 
-window.onload = fetchDreams;
+window.onload = () => {
+  fetchDreams();
+};

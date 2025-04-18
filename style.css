@@ -21,17 +21,17 @@ h1 {
 }
 
 #buckets-list {
-  column-count: 3; /* Flexibly divide into 3 columns */
-  column-gap: 20px; /* Gap between columns */
-  display: block; /* Use block display to manage column layout */
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap into multiple rows */
+  gap: 20px; /* Spacing between items */
+  justify-content: flex-start; /* Align items to the start */
 }
 
 .bucket {
   background-color: white;
   padding: 1rem;
   border: 1px solid #ddd;
-  margin-bottom: 20px;
-  width: 100%; /* Ensure bucket occupies the full width of each column */
+  width: calc(33.333% - 20px); /* 3 columns, accounting for the gap */
   height: 300px; /* Fixed height for each bucket */
   overflow-y: auto; /* Make each bucket scrollable if content overflows */
   box-sizing: border-box;
