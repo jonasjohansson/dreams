@@ -25,6 +25,19 @@ const fetchDreams = async () => {
             images {
               large
             }
+            customFields {
+              value
+              customField {
+                id
+                name
+                type
+                limit
+                description
+                isRequired
+                position
+                createdAt
+              }
+            }
           }
         }
       }
@@ -34,8 +47,8 @@ const fetchDreams = async () => {
     groupSlug: "borderland",
     roundSlug: "borderland-dreams-2025",
     offset: 0,
-    limit: 10, // Limit to 5 buckets
-    status: ["OPEN_FOR_FUNDING"], // Only fetching buckets with this status
+    limit: 6,
+    status: ["OPEN_FOR_FUNDING"],
   };
 
   try {
@@ -59,22 +72,31 @@ const fetchDreams = async () => {
     }
 
     const buckets = data.data.bucketsPage.buckets;
+    console.log(buckets);
 
-    // Handling empty buckets state
     if (!buckets || buckets.length === 0) {
       document.querySelector(".loading").textContent = "No buckets found.";
       return;
     }
 
-    // Using DocumentFragment to append multiple items
     const fragment = document.createDocumentFragment();
+
     buckets.forEach((bucket) => {
       const bucketDiv = document.createElement("div");
       bucketDiv.className = "bucket";
+
+      // Generate custom field HTML
+      const customFieldsHTML = bucket.customFields
+        .map((cf) => {
+          const fieldName = cf.customField?.name || "Unnamed Field";
+          const value = cf.value || "N/A";
+          return `<p><strong>${fieldName}:</strong> ${value}</p>`;
+        })
+        .join("");
+
       bucketDiv.innerHTML = `
           <h3>${bucket.title}</h3>
           <p><strong>Summary:</strong> ${bucket.summary || "N/A"}</p>
-          <p><strong>Description:</strong> ${bucket.description || "N/A"}</p>
           <p><strong>No. of Funders:</strong> ${bucket.noOfFunders}</p>
           <p><strong>No. of Comments:</strong> ${bucket.noOfComments}</p>
           <p><strong>Percentage Funded:</strong> ${bucket.percentageFunded}%</p>
@@ -85,25 +107,26 @@ const fetchDreams = async () => {
               ? bucket.images
                   .map(
                     (image) =>
-                      `<img src="${image.large}" alt="${bucket.title} large" style="max-width: 100%; height: auto;" />`
+                      `<img src="${image.large}" alt="${bucket.title} image" style="max-width: 100%; height: auto;" />`
                   )
                   .join("")
-              : "No images available."
+              : "<p>No images available.</p>"
           }
+          <div class="custom-fields">
+            ${customFieldsHTML || "<p>No custom fields found.</p>"}
+          </div>
         `;
+
       fragment.appendChild(bucketDiv);
     });
 
-    // Append the fragment to the bucket list
     document.getElementById("buckets-list").appendChild(fragment);
   } catch (error) {
     console.error("Error fetching data:", error);
     document.querySelector(".loading").textContent = "Error fetching data.";
   } finally {
-    // Hide loading text after data is fetched
     document.querySelector(".loading").style.display = "none";
   }
 };
 
-// Run the function to fetch dreams when the page loads
 window.onload = fetchDreams;
