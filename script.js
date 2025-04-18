@@ -1,7 +1,7 @@
 let isLoading = false; // Make sure this is declared at the top
 let allLoaded = false;
 let offset = 0;
-const limit = 30;
+const limit = 9;
 
 console.log(marked); // This should log the function definition if loaded correctly
 
@@ -35,7 +35,7 @@ const fetchDreams = async () => {
               minGoal
               maxGoal
               income
-              images { large }
+              images { small, large }
               customFields {
                 value
                 customField { name }
@@ -104,7 +104,7 @@ const fetchDreams = async () => {
         ? images
             .map(
               (img) =>
-                `<img src="${img.large}" alt="${title} image" style="max-width: 100%; height: auto;" />`
+                `<img src="${img.small}" alt="${title} image" style="max-width: 100%; height: auto;" />`
             )
             .join("")
         : "<p>No images available.</p>";
