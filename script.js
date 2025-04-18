@@ -1,11 +1,74 @@
-let isLoading = false; // Make sure this is declared at the top
+let isLoading = false;
 let allLoaded = false;
 let offset = 0;
 let limit = 9;
+const searchBar = document.getElementById("search-bar");
 
-console.log(marked); // This should log the function definition if loaded correctly
+let allBuckets = []; // Store all fetched buckets globally
 
-// Your existing fetchDreams code follows...
+const renderBuckets = (bucketsToRender) => {
+  const list = document.getElementById("buckets-list");
+  list.innerHTML = ""; // Clear previous entries
+
+  const urlBase = "https://cobudget.com/borderland/borderland-dreams-2025";
+  const fragment = document.createDocumentFragment();
+
+  bucketsToRender.forEach(
+    ({
+      id,
+      title,
+      summary,
+      noOfFunders,
+      noOfComments,
+      percentageFunded,
+      minGoal,
+      maxGoal,
+      images,
+      customFields,
+    }) => {
+      const bucketDiv = document.createElement("div");
+      bucketDiv.className = "bucket";
+
+      const customFieldsHTML = customFields
+        .map(
+          ({ customField, value }) =>
+            `<p><strong>${customField?.name || "Unnamed Field"}:</strong> ${
+              value ? marked.parse(value) : "N/A"
+            }</p>`
+        )
+        .join("");
+
+      const imagesHTML = images?.length
+        ? images
+            .map(
+              (img) =>
+                `<img src="${img.small}" alt="${title} image" style="max-width: 100%; height: auto;" />`
+            )
+            .join("")
+        : "<p>No images available.</p>";
+
+      bucketDiv.innerHTML = `
+        <h3><a href="${urlBase}/${id}">${title}</a></h3>
+        <p><strong>Summary:</strong> ${summary || "N/A"}</p>
+        <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
+        <p><strong>No. of Comments:</strong> ${noOfComments}</p>
+        <p><strong>Percentage Funded:</strong> ${percentageFunded}%</p>
+        <p><strong>Minimum Goal:</strong> ${minGoal}</p>
+        <p><strong>Maximum Goal:</strong> ${maxGoal}</p>
+        ${imagesHTML}
+        <div class="custom-fields">${
+          customFieldsHTML || "<p>No custom fields found.</p>"
+        }</div>
+      `;
+
+      fragment.appendChild(bucketDiv);
+    }
+  );
+
+  list.appendChild(fragment);
+
+  handleSearch();
+};
 
 const fetchDreams = async () => {
   if (isLoading || allLoaded) return;
@@ -70,65 +133,8 @@ const fetchDreams = async () => {
     return;
   }
 
-  const urlBase = "https://cobudget.com/borderland/borderland-dreams-2025";
-  const fragment = document.createDocumentFragment();
-
-  buckets.forEach(
-    ({
-      id,
-      title,
-      summary,
-      noOfFunders,
-      noOfComments,
-      percentageFunded,
-      minGoal,
-      maxGoal,
-      images,
-      customFields,
-    }) => {
-      const bucketDiv = document.createElement("div");
-      bucketDiv.className = "bucket";
-
-      // Convert markdown content in custom fields to HTML
-      const customFieldsHTML = customFields
-        .map(
-          ({ customField, value }) =>
-            `<p><strong>${customField?.name || "Unnamed Field"}:</strong> ${
-              value ? marked.parse(value) : "N/A"
-            }</p>`
-        )
-        .join("");
-
-      // Convert images into HTML
-      const imagesHTML = images?.length
-        ? images
-            .map(
-              (img) =>
-                `<img src="${img.small}" alt="${title} image" style="max-width: 100%; height: auto;" />`
-            )
-            .join("")
-        : "<p>No images available.</p>";
-
-      bucketDiv.innerHTML = `
-        <h3><a href="${urlBase}/${id}">${title}</a></h3>
-        <p><strong>Summary:</strong> ${summary || "N/A"}</p>
-        <p><strong>No. of Funders:</strong> ${noOfFunders}</p>
-        <p><strong>No. of Comments:</strong> ${noOfComments}</p>
-        <p><strong>Percentage Funded:</strong> ${percentageFunded}%</p>
-        <p><strong>Minimum Goal:</strong> ${minGoal}</p>
-        <p><strong>Maximum Goal:</strong> ${maxGoal}</p>
-        ${imagesHTML}
-        <div class="custom-fields">${
-          customFieldsHTML || "<p>No custom fields found.</p>"
-        }</div>
-      `;
-
-      fragment.appendChild(bucketDiv);
-    }
-  );
-
-  document.getElementById("buckets-list").appendChild(fragment);
-  loadingEl.style.display = "none";
+  allBuckets.push(...buckets); // Add to global array
+  renderBuckets(allBuckets); // Initial render
 
   offset += limit;
   limit += 9;
@@ -136,13 +142,30 @@ const fetchDreams = async () => {
 
   if (!page.moreExist) {
     allLoaded = true;
+    loadingEl.style.display = "none";
   } else {
-    console.log(`There's more! Currently at ${offset}`);
+    console.log(`More dreams remain. Currently at offset: ${offset}`);
   }
 
+  // Fetch more until everything is loaded
   fetchDreams();
 };
 
+function handleSearch(event) {
+  const query =
+    event?.target?.value?.toLowerCase() || searchBar.value.toLowerCase();
+  const buckets = document.querySelectorAll(".bucket");
+
+  buckets.forEach((bucket) => {
+    const text = bucket.innerText.toLowerCase();
+    bucket.style.display = text.includes(query) ? "block" : "none";
+  });
+}
+
 window.onload = () => {
   fetchDreams();
+
+  // Set up search handler
+  const searchBar = document.getElementById("search-bar");
+  searchBar.addEventListener("input", handleSearch);
 };
