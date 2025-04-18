@@ -1,7 +1,11 @@
-let offset = 0;
-const limit = 12;
-let isLoading = false;
+let isLoading = false; // Make sure this is declared at the top
 let allLoaded = false;
+let offset = 0;
+const limit = 30;
+
+console.log(marked); // This should log the function definition if loaded correctly
+
+// Your existing fetchDreams code follows...
 
 const fetchDreams = async () => {
   if (isLoading || allLoaded) return;
@@ -85,15 +89,17 @@ const fetchDreams = async () => {
       const bucketDiv = document.createElement("div");
       bucketDiv.className = "bucket";
 
+      // Convert markdown content in custom fields to HTML
       const customFieldsHTML = customFields
         .map(
           ({ customField, value }) =>
             `<p><strong>${customField?.name || "Unnamed Field"}:</strong> ${
-              value || "N/A"
+              value ? marked.parse(value) : "N/A"
             }</p>`
         )
         .join("");
 
+      // Convert images into HTML
       const imagesHTML = images?.length
         ? images
             .map(
@@ -121,10 +127,7 @@ const fetchDreams = async () => {
     }
   );
 
-  // Append the fragment correctly to the list
-  const bucketsList = document.getElementById("buckets-list");
-  bucketsList.appendChild(fragment);
-
+  document.getElementById("buckets-list").appendChild(fragment);
   loadingEl.style.display = "none";
 
   offset += limit;
@@ -134,10 +137,7 @@ const fetchDreams = async () => {
     allLoaded = true;
   }
 
-  // Fetch the next batch if there are more items available
-  if (page.moreExist && !allLoaded) {
-    fetchDreams();
-  }
+  fetchDreams();
 };
 
 window.onload = () => {
