@@ -1,7 +1,7 @@
 let isLoading = false; // Make sure this is declared at the top
 let allLoaded = false;
 let offset = 0;
-const limit = 9;
+let limit = 9;
 
 console.log(marked); // This should log the function definition if loaded correctly
 
@@ -131,10 +131,13 @@ const fetchDreams = async () => {
   loadingEl.style.display = "none";
 
   offset += limit;
+  limit += 9;
   isLoading = false;
 
   if (!page.moreExist) {
     allLoaded = true;
+  } else {
+    console.log(`There's more! Currently at ${offset}`);
   }
 
   fetchDreams();
