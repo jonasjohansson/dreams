@@ -85,6 +85,7 @@ const renderBuckets = (bucketsToRender) => {
         </p>
 
         <div class="progress-bar-container">
+          <p><strong>Percentage Funded:</strong></p>
           <div class="progress-bar">
             <div class="progress" style="width: ${percentageFunded2}%"></div>
           </div>
