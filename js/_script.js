@@ -214,6 +214,43 @@ function handleSearch(event) {
   });
 }
 
+function renderRatingUI(bucketId, existingRating = 0) {
+  const savedRating = localStorage.getItem(`rating-${bucketId}`);
+  const rating = savedRating ? parseInt(savedRating) : existingRating;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "rating-wrapper";
+  wrapper.innerHTML = `<p>Rate this dream:</p>`;
+
+  const starContainer = document.createElement("div");
+  starContainer.className = "stars";
+
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement("span");
+    star.className = "star";
+    star.innerHTML = "★";
+    star.dataset.value = i;
+
+    if (i <= rating) {
+      star.classList.add("rated");
+    }
+
+    star.addEventListener("click", () => {
+      localStorage.setItem(`rating-${bucketId}`, i);
+      const siblings = starContainer.querySelectorAll(".star");
+      siblings.forEach((s, index) => {
+        if (index < i) s.classList.add("rated");
+        else s.classList.remove("rated");
+      });
+    });
+
+    starContainer.appendChild(star);
+  }
+
+  wrapper.appendChild(starContainer);
+  return wrapper;
+}
+
 function removeEmojis(text) {
   // Check if the text is valid (not null or undefined)
   if (text && typeof text === "string") {
