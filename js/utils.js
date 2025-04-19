@@ -6,8 +6,8 @@ export function removeEmojis(str = "") {
 }
 
 export function cleanCustomFieldValue(value) {
-  if (typeof value === "string" && value.trim().startsWith("<")) {
-    return marked.parse(value); // using marked lib
-  }
+  //if (typeof value === "string" && value.trim().startsWith("<")) {
+  //  return marked.parse(value); // using marked lib
+  //}
   return value;
 }
