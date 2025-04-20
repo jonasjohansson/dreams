@@ -1,0 +1,52 @@
+{
+  "info": {
+    "_postman_id": "579bf3ec-3a39-41eb-816e-7ef711924a13",
+    "name": "Cobudget API examples",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4462373"
+  },
+  "item": [
+    {
+      "name": "Borderland Buckets",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query Buckets($groupSlug: String, $roundSlug: String!, $textSearchTerm: String, $tag: String, $offset: Int, $limit: Int, $status: [StatusType!], $orderBy: String, $orderDir: String) {  bucketsPage(\n    groupSlug: $groupSlug\n    roundSlug: $roundSlug\n    textSearchTerm: $textSearchTerm\n    tag: $tag\n    offset: $offset\n    limit: $limit\n    status: $status\n    orderBy: $orderBy\n    orderDir: $orderDir\n  ) {\n    moreExist\n    buckets {\n      id\n      description\n      summary\n      title\n      cocreators {\n        user {\n            roundMemberships {\n                email\n                round {\n                    slug\n                }\n            }\n        }\n      }\n      minGoal\n      maxGoal\n      flags {\n        type\n        __typename\n      }\n      noOfFunders\n      income\n      totalContributions\n      totalContributionsFromCurrentMember\n      noOfComments\n      published\n      approved\n      canceled\n      status\n      percentageFunded\n      round {\n        canCocreatorStartFunding\n        __typename\n      }\n      customFields {\n        value\n        customField {\n          id\n          name\n          type\n          limit\n          description\n          isRequired\n          position\n          createdAt\n          __typename\n        }\n        __typename\n      }\n      images {\n        id\n        small\n        large\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
+            "variables": "{\n    \"groupSlug\": \"borderland\",\n    \"roundSlug\": \"dreams-2023\",\n    \"offset\": 0,\n    \"limit\": 10,\n    \"status\": [\n        \"PENDING_APPROVAL\",\n        \"OPEN_FOR_FUNDING\",\n        \"IDEA\",\n        \"FUNDED\",\n        \"CANCELED\",\n        \"COMPLETED\"\n    ]\n}"
+          }
+        },
+        "url": {
+          "raw": "https://cobudget.com/api",
+          "protocol": "https",
+          "host": ["cobudget", "com"],
+          "path": ["api"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Borderland Members",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query Members($roundId: ID!, $search: String!, $offset: Int, $limit: Int) {\n  membersPage(\n    roundId: $roundId\n    isApproved: true\n    search: $search\n    offset: $offset\n    limit: $limit\n  ) {\n    moreExist\n    members(roundId: $roundId, isApproved: true, offset: $offset, limit: $limit) {\n      id\n      isAdmin\n      isModerator\n      isApproved\n      createdAt\n      balance\n      email\n      hasJoined\n      user {\n        id\n        username\n        name\n        verifiedEmail\n        avatar\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
+            "variables": "{\n    \"roundId\":\"cluzhxivq153508l9hmsnn4sy\",\n    \"search\":\"\",\n    \"offset\":0,\n    \"limit\":30\n}"
+          }
+        },
+        "url": {
+          "raw": "https://cobudget.com/api",
+          "protocol": "https",
+          "host": ["cobudget", "com"],
+          "path": ["api"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

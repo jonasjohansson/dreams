@@ -4,6 +4,7 @@ let isLoading = false;
 let allLoaded = false;
 let offset = 0;
 let limit = 9;
+let tag = "";
 const loadingEl = document.querySelector(".loading");
 const allBuckets = [];
 
@@ -17,12 +18,13 @@ export const fetchDreams = async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `
-          query Buckets($groupSlug: String, $roundSlug: String!, $offset: Int, $limit: Int, $status: [StatusType!]) { 
+          query Buckets($groupSlug: String, $roundSlug: String!, $tag: String, $offset: Int, $limit: Int, $status: [StatusType!]) { 
             bucketsPage(
               groupSlug: $groupSlug
               roundSlug: $roundSlug
               offset: $offset
               limit: $limit
+              tag: $tag
               status: $status
             ) {
               moreExist
@@ -49,6 +51,7 @@ export const fetchDreams = async () => {
           groupSlug: "borderland",
           roundSlug: "borderland-dreams-2025",
           offset,
+          tag,
           limit,
           status: ["OPEN_FOR_FUNDING"],
         },
@@ -58,6 +61,7 @@ export const fetchDreams = async () => {
     const { data } = await response.json();
     const page = data?.bucketsPage;
     const buckets = page?.buckets || [];
+    console.log(buckets);
 
     if (!buckets.length) {
       loadingEl.textContent =
