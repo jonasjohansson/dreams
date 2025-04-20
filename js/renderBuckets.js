@@ -28,6 +28,9 @@ export function renderBuckets(bucketsToRender) {
     div.dataset.rating = getRating(id);
 
     const customFieldsHTML = customFields
+      .filter(
+        ({ customField }) => customField?.name?.toLowerCase() === "description"
+      )
       .map(
         ({ customField, value }) =>
           `<p><strong>${
