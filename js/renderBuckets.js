@@ -99,5 +99,4 @@ export function renderBuckets(bucketsToRender) {
   });
 
   list.appendChild(fragment);
-  handleSearch();
 }
