@@ -1,0 +1,12 @@
+{
+  "name": "savebuckets",
+  "version": "1.0.0",
+  "main": "saveBuckets.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": ""
+}

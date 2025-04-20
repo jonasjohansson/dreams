@@ -1,49 +1,30 @@
+import { bucketsData } from "./bucketsData.js";
+
 import { renderBuckets } from "./renderBuckets.js";
-import { fetchBuckets } from "./api.js";
-import {
-  getIsLoading,
-  getAllLoaded,
-  getOffset,
-  updateOffset,
-  allBuckets,
-  setLoading,
-  setAllLoaded,
-} from "./state.js";
+import { getIsLoading, setLoading, setAllLoaded, allBuckets } from "./state.js";
 
 import { setLoadingMessage, hideLoading } from "./domHelpers.js";
-import { DEFAULT_LIMIT } from "./config.js";
-
 export async function fetchDreams() {
-  if (getIsLoading() || getAllLoaded()) return;
+  if (getIsLoading()) return;
   setLoading(true);
 
   try {
-    const offset = getOffset();
-    const { buckets, moreExist } = await fetchBuckets(offset);
+    const buckets = bucketsData.buckets;
 
     if (!buckets.length) {
-      setLoadingMessage(
-        offset === 0 ? "No buckets found." : "No more dreams to load."
-      );
+      setLoadingMessage("No dreams found.");
       setAllLoaded(true);
       return;
     }
 
     allBuckets.push(...buckets);
     renderBuckets(buckets);
-    updateOffset(DEFAULT_LIMIT);
-
-    if (!moreExist) {
-      setAllLoaded(true);
-      hideLoading();
-    } else {
-      setLoadingMessage(`Loaded ${getOffset()} dreams`);
-    }
-
-    setLoading(false);
-    fetchDreams(); // load next page
+    setAllLoaded(true);
+    hideLoading();
   } catch (error) {
-    console.error("Error fetching dreams:", error);
+    console.error("Error loading dreams:", error);
+    setLoadingMessage("Failed to load dreams.");
+  } finally {
     setLoading(false);
   }
 }
