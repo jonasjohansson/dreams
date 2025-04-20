@@ -7,14 +7,25 @@
     <link rel="stylesheet" href="css/style.css" />
     <script type="module" src="js/script.js"></script>
     <!-- Shoelace UI components-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css" />
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"
+    ></script>
   </head>
   <body class="rating-unrated">
     <p class="loading">Loading...</p>
     <br />
-    <sl-input type="text" id="search-bar" placeholder="Search dreams..."></sl-input>
-    <div class="rating-filter">
+    <sl-input
+      style="display: none"
+      type="text"
+      id="search-bar"
+      placeholder="Search dreams..."
+    ></sl-input>
+    <div class="rating-filter" style="padding: 1rem; text-align: center">
       <label
         ><input type="checkbox" class="rating-checkbox" data-rating="5" /> ★
         5</label

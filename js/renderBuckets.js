@@ -64,12 +64,12 @@ export function renderBuckets(bucketsToRender) {
       <main>
         <img class="cover" src="${coverImage}">
         <p>${cleanSummary || "N/A"}</p>
-        ${imagesHTML}
         <div class="custom-fields">
           ${customFieldsHTML || "<p>No custom fields found.</p>"}
         </div>
+        ${imagesHTML}
       </main>
-      <footer>
+      <footer style="display:none">
         <p class="funders-comments">
           <span class="icon funder-icon">💰</span>
           <span><strong>${noOfFunders}</strong> Funders</span>
