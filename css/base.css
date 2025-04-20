@@ -27,13 +27,6 @@ a {
   color: inherit;
 }
 
-img.cover {
-  object-fit: cover;
-  object-position: center center;
-  width: 100%;
-  height: 67%;
-}
-
 ul:not(:last-child),
 ol:not(:last-child),
 p:not(:last-child) {
