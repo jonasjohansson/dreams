@@ -1,7 +1,7 @@
 import { fetchDreams } from "./fetchDreams.js";
 import { handleSearch } from "./handleSearch.js";
+import { initRatingFilter } from "./rating.js";
 
 document.getElementById("search-bar").addEventListener("input", handleSearch);
-
-// Kick things off
+initRatingFilter();
 fetchDreams();

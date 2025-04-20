@@ -1,3 +1,22 @@
+/* Hide all buckets by default */
+.bucket {
+  display: none;
+}
+
+body.rating-1 .bucket:has([data-rating="1"]),
+body.rating-2 .bucket:has([data-rating="2"]),
+body.rating-3 .bucket:has([data-rating="3"]),
+body.rating-4 .bucket:has([data-rating="4"]),
+body.rating-5 .bucket:has([data-rating="5"]),
+body.rating-unrated .bucket:has([data-rating="0"]) {
+  display: block;
+}
+
+/* Show all buckets when no filters are checked */
+.filter-rating:not(:checked):checked ~ #buckets-list .bucket {
+  display: block;
+}
+
 .rating-wrapper {
   font-size: 1em;
 }
@@ -13,4 +32,14 @@
 }
 .star.rated {
   color: gold;
+}
+
+input[type="radio"]:checked ~ label.star,
+input[type="radio"]:checked ~ label.star ~ label.star {
+  color: gold;
+}
+
+input[type="radio"]:not(:checked) ~ label.star:hover,
+label.star:hover {
+  color: #ffcc00;
 }

@@ -6,6 +6,6 @@ export function handleSearch(event) {
 
   buckets.forEach((bucket) => {
     const text = bucket.innerText.toLowerCase();
-    bucket.style.display = text.includes(query) ? "block" : "none";
+    //bucket.style.display = text.includes(query) ? "block" : "none";
   });
 }

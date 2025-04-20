@@ -7,10 +7,41 @@
     <link rel="stylesheet" href="css/style.css" />
     <script type="module" src="js/script.js"></script>
   </head>
-  <body>
+  <body class="rating-unrated">
     <p class="loading">Loading...</p>
     <br />
     <input type="text" id="search-bar" placeholder="Search dreams..." />
+    <div class="rating-filter">
+      <label
+        ><input type="checkbox" class="rating-checkbox" data-rating="5" /> ★
+        5</label
+      >
+      <label
+        ><input type="checkbox" class="rating-checkbox" data-rating="4" /> ★
+        4</label
+      >
+      <label
+        ><input type="checkbox" class="rating-checkbox" data-rating="3" /> ★
+        3</label
+      >
+      <label
+        ><input type="checkbox" class="rating-checkbox" data-rating="2" /> ★
+        2</label
+      >
+      <label
+        ><input type="checkbox" class="rating-checkbox" data-rating="1" /> ★
+        1</label
+      >
+      <label
+        ><input
+          type="checkbox"
+          checked
+          class="rating-checkbox"
+          data-rating="unrated"
+        />
+        Unrated</label
+      >
+    </div>
     <div id="buckets-list"></div>
   </body>
 </html>

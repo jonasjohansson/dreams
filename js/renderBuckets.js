@@ -1,106 +1,103 @@
 import { handleSearch } from "./handleSearch.js";
 import { removeEmojis, cleanCustomFieldValue } from "./utils.js";
-import { renderRatingUI } from "./rating.js";
+import { renderRatingUI, getRating } from "./rating.js";
+import { DREAMS_URL } from "./config.js";
 
-export const renderBuckets = (bucketsToRender) => {
+export function renderBuckets(bucketsToRender) {
   const list = document.getElementById("buckets-list");
-  const urlBase = "https://cobudget.com/borderland/borderland-dreams-2025";
+  const urlBase = DREAMS_URL;
   const fragment = document.createDocumentFragment();
 
-  bucketsToRender.forEach(
-    (
-      {
-        id,
-        title,
-        summary,
-        noOfFunders,
-        noOfComments,
-        percentageFunded,
-        income,
-        minGoal,
-        maxGoal,
-        images,
-        customFields,
-      },
-      index
-    ) => {
-      const bucketDiv = document.createElement("div");
-      bucketDiv.className = "bucket";
-      bucketDiv.style.opacity = 0;
-      bucketDiv.style.transition = `opacity 0.6s ease ${index * 50}ms`;
+  bucketsToRender.forEach((bucket, index) => {
+    const {
+      id,
+      title,
+      summary,
+      noOfFunders,
+      noOfComments,
+      percentageFunded,
+      income,
+      minGoal,
+      maxGoal,
+      images,
+      customFields,
+    } = bucket;
 
-      const customFieldsHTML = customFields
-        .map(
-          ({ customField, value }) =>
-            `<p><strong>${
-              customField?.name || "Unnamed Field"
-            }:</strong> ${cleanCustomFieldValue(value)}</p>`
-        )
-        .join("");
+    const div = document.createElement("div");
+    div.className = "bucket";
+    div.dataset.rating = getRating(id);
 
-      const coverImage = images[0]?.small;
-      const imagesHTML =
-        images?.length > 1
-          ? images
-              .slice(1)
-              .map((img) => `<img src="${img.small}" alt="${title} image" />`)
-              .join("")
-          : "<p>No images available.</p>";
+    const customFieldsHTML = customFields
+      .map(
+        ({ customField, value }) =>
+          `<p><strong>${
+            customField?.name || "Unnamed Field"
+          }:</strong> ${cleanCustomFieldValue(value)}</p>`
+      )
+      .join("");
 
-      const cleanTitle = removeEmojis(title || "");
-      const cleanSummary = removeEmojis(summary || "");
-      const incomeCents = income / 100;
-      const minCents = minGoal / 100;
-      const maxCents = maxGoal / 100;
-      const funded = Math.round(
-        minCents * (percentageFunded / 100) - incomeCents
-      );
-      const percentageFunded2 = ((funded / minCents) * 100).toFixed(2);
+    const coverImage = images[0]?.small || "";
+    const imagesHTML =
+      images.length > 1
+        ? images
+            .slice(1)
+            .map((img) => `<img src="${img.small}" alt="${title} image" />`)
+            .join("")
+        : "<p>No images available.</p>";
 
-      const ratingUI = renderRatingUI(id, 0); // default to 0 stars
-      bucketDiv.innerHTML = `
-        <header>
-          <h3><a href="${urlBase}/${id}">${cleanTitle}</a></h3>
-          <div class="rating-placeholder"></div>
-        </header>
-        <main>
-          <p>${cleanSummary || "N/A"}</p>
-          <img class="cover" src="${coverImage}">
-          ${imagesHTML}
-          <div class="custom-fields">
-            ${customFieldsHTML || "<p>No custom fields found.</p>"}
+    const cleanTitle = removeEmojis(title || "");
+    const cleanSummary = removeEmojis(summary || "");
+    const incomeCents = income / 100;
+    const minCents = minGoal / 100;
+    const maxCents = maxGoal / 100;
+    const funded = Math.round(
+      minCents * (percentageFunded / 100) - incomeCents
+    );
+    const percentageFunded2 = ((funded / minCents) * 100).toFixed(2);
+    const ratingUI = renderRatingUI(id, 0);
+
+    div.innerHTML = `
+      <header>
+        <h3><a href="${urlBase}/${id}">${cleanTitle}</a></h3>
+        <div class="rating-placeholder"></div>
+      </header>
+      <main>
+        <p>${cleanSummary || "N/A"}</p>
+        <img class="cover" src="${coverImage}">
+        ${imagesHTML}
+        <div class="custom-fields">
+          ${customFieldsHTML || "<p>No custom fields found.</p>"}
+        </div>
+      </main>
+      <footer>
+        <p class="funders-comments">
+          <span class="icon funder-icon">💰</span>
+          <span><strong>${noOfFunders}</strong> Funders</span>
+          <span class="icon comment-icon">💬</span>
+          <span><strong>${noOfComments}</strong> Comments</span>
+        </p>
+        <div class="progress-bar-container">
+          <p><strong>Percentage Funded:</strong></p>
+          <div class="progress-bar">
+            <div class="progress" style="width: ${percentageFunded2}%"></div>
           </div>
-        </main>
-        <footer>
-          <p class="funders-comments">
-            <span class="icon funder-icon">💰</span>
-            <span><strong>${noOfFunders}</strong> Funders</span>
-            <span class="icon comment-icon">💬</span>
-            <span><strong>${noOfComments}</strong> Comments</span>
-          </p>
-          <div class="progress-bar-container">
-            <p><strong>Percentage Funded:</strong></p>
-            <div class="progress-bar">
-              <div class="progress" style="width: ${percentageFunded2}%"></div>
-            </div>
-            <p>${percentageFunded2}%</p>
-          </div>
-          <div class="goals">
-            <p><strong>Min Goal:</strong> ${minCents}</p>
-            <p><strong>Max Goal:</strong> ${maxCents}</p>
-          </div>
-        </footer>
-      `;
+          <p>${percentageFunded2}%</p>
+        </div>
+        <div class="goals">
+          <p><strong>Min Goal:</strong> ${minCents}</p>
+          <p><strong>Max Goal:</strong> ${maxCents}</p>
+        </div>
+      </footer>
+    `;
 
-      bucketDiv.querySelector(".rating-placeholder").appendChild(ratingUI);
-      fragment.appendChild(bucketDiv);
+    div.querySelector(".rating-placeholder").appendChild(ratingUI);
+    fragment.appendChild(div);
 
-      setTimeout(() => {
-        bucketDiv.style.opacity = 1;
-      }, 50 * index);
-    }
-  );
+    setTimeout(() => {
+      div.style.opacity = 1;
+    }, 50 * index);
+  });
 
   list.appendChild(fragment);
-  handleSearch(); // update search to include new entries
-};
+  handleSearch();
+}
