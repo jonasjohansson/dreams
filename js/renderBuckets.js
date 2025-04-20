@@ -43,7 +43,7 @@ export function renderBuckets(bucketsToRender) {
             .slice(1)
             .map((img) => `<img src="${img.small}" alt="${title} image" />`)
             .join("")
-        : "<p>No images available.</p>";
+        : "";
 
     const cleanTitle = removeEmojis(title || "");
     const cleanSummary = removeEmojis(summary || "");
@@ -62,8 +62,8 @@ export function renderBuckets(bucketsToRender) {
         <div class="rating-placeholder"></div>
       </header>
       <main>
-        <p>${cleanSummary || "N/A"}</p>
         <img class="cover" src="${coverImage}">
+        <p>${cleanSummary || "N/A"}</p>
         ${imagesHTML}
         <div class="custom-fields">
           ${customFieldsHTML || "<p>No custom fields found.</p>"}
