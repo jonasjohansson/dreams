@@ -3,7 +3,7 @@ import { renderBuckets } from "./renderBuckets.js";
 import { getIsLoading, setLoading, setAllLoaded, allBuckets } from "./state.js";
 import { setLoadingMessage, hideLoading } from "./domHelpers.js";
 
-export async function fetchDreams(chunkSize = 25, delay = 1000) {
+export async function fetchDreams(chunkSize = 9, delay = 1500) {
   if (getIsLoading()) return;
   setLoading(true);
 
@@ -21,7 +21,7 @@ export async function fetchDreams(chunkSize = 25, delay = 1000) {
     // Staggered rendering
     for (let i = 0; i < total; i += chunkSize) {
       const chunk = buckets.slice(i, i + chunkSize);
-      allBuckets.push(...chunk);
+      //allBuckets.push(...chunk);
       renderBuckets(chunk);
 
       // Wait a bit before rendering the next chunk

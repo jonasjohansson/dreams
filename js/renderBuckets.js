@@ -91,12 +91,12 @@ export function renderBuckets(bucketsToRender) {
     `;
 
     div.querySelector(".rating-placeholder").appendChild(ratingUI);
-    list.appendChild(div);
+    fragment.appendChild(div);
 
     setTimeout(() => {
       div.style.opacity = 1;
     }, 50 * index);
   });
 
-  //list.appendChild(fragment);
+  list.appendChild(fragment);
 }
