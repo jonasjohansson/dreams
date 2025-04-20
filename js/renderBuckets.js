@@ -1,5 +1,6 @@
 import { handleSearch } from "./handleSearch.js";
 import { removeEmojis, cleanCustomFieldValue } from "./utils.js";
+import { renderRatingUI } from "./rating.js";
 
 export const renderBuckets = (bucketsToRender) => {
   const list = document.getElementById("buckets-list");
@@ -56,9 +57,11 @@ export const renderBuckets = (bucketsToRender) => {
       );
       const percentageFunded2 = ((funded / minCents) * 100).toFixed(2);
 
+      const ratingUI = renderRatingUI(id, 0); // default to 0 stars
       bucketDiv.innerHTML = `
         <header>
           <h3><a href="${urlBase}/${id}">${cleanTitle}</a></h3>
+          <div class="rating-placeholder"></div>
         </header>
         <main>
           <p>${cleanSummary || "N/A"}</p>
@@ -89,6 +92,7 @@ export const renderBuckets = (bucketsToRender) => {
         </footer>
       `;
 
+      bucketDiv.querySelector(".rating-placeholder").appendChild(ratingUI);
       fragment.appendChild(bucketDiv);
 
       setTimeout(() => {
