@@ -1,14 +1,15 @@
 import { bucketsData } from "./bucketsData.js";
 import { renderBuckets } from "./renderBuckets.js";
 import { getIsLoading, setLoading, setAllLoaded, allBuckets } from "./state.js";
-import { setLoadingMessage, hideLoading } from "./domHelpers.js";
+import { setLoadingMessage, hideLoading, shuffleArray } from "./domHelpers.js";
 
 export async function fetchDreams(chunkSize = 27, delay = 500) {
   if (getIsLoading()) return;
   setLoading(true);
 
   try {
-    const buckets = bucketsData.buckets;
+    // 🌀 Shuffle buckets before rendering
+    const buckets = shuffleArray([...bucketsData.buckets]);
 
     if (!buckets.length) {
       setLoadingMessage("No dreams found.");
@@ -21,7 +22,6 @@ export async function fetchDreams(chunkSize = 27, delay = 500) {
     // Staggered rendering
     for (let i = 0; i < total; i += chunkSize) {
       const chunk = buckets.slice(i, i + chunkSize);
-      //allBuckets.push(...chunk);
       renderBuckets(chunk);
 
       // Wait a bit before rendering the next chunk

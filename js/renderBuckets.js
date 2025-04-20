@@ -1,5 +1,5 @@
 import { handleSearch } from "./handleSearch.js";
-import { removeEmojis, cleanCustomFieldValue } from "./utils.js";
+import { removeEmojis, cleanCustomFieldValue } from "./domHelpers.js";
 import { renderRatingUI, getRating } from "./rating.js";
 import { DREAMS_URL } from "./config.js";
 
