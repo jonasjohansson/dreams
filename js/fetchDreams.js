@@ -3,7 +3,7 @@ import { renderBuckets } from "./renderBuckets.js";
 import { getIsLoading, setLoading, setAllLoaded, allBuckets } from "./state.js";
 import { setLoadingMessage, hideLoading } from "./domHelpers.js";
 
-export async function fetchDreams(chunkSize = 25, delay = 500) {
+export async function fetchDreams(chunkSize = 25, delay = 1000) {
   if (getIsLoading()) return;
   setLoading(true);
 
