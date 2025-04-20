@@ -37,7 +37,7 @@ export async function fetchDreams() {
       setAllLoaded(true);
       hideLoading();
     } else {
-      setLoadingMessage(`Loaded ${getOffset()}/464 dreams`);
+      setLoadingMessage(`Loaded ${getOffset()} dreams`);
     }
 
     setLoading(false);
