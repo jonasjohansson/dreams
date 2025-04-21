@@ -2,6 +2,30 @@ import fs from "fs";
 import path from "path";
 import { fetchBuckets } from "./fetchBuckets.js";
 
+function enhanceBucket(bucket) {
+  const income = bucket.income / 100;
+  const minGoal = bucket.minGoal / 100;
+  const maxGoal = bucket.maxGoal / 100;
+
+  // Calculate the expected income based on percentageFunded alone
+  const estimatedTotalFunding = (bucket.percentageFunded / 100) * minGoal;
+
+  // Calculate how much more funding is needed (remaining to fully reach the current estimated goal)
+  const funded = Math.round(estimatedTotalFunding - income);
+
+  // Calculate how much of the goal has actually been funded
+  const percentageFundedTrue = ((funded / minGoal) * 100).toFixed(2);
+
+  return {
+    ...bucket,
+    minGoal: minGoal,
+    maxGoal: maxGoal,
+    income: income,
+    funded: funded,
+    percentageFundedTrue: parseFloat(percentageFundedTrue),
+  };
+}
+
 const allBuckets = [];
 
 async function preloadAllBuckets() {
@@ -15,7 +39,7 @@ async function preloadAllBuckets() {
       "",
       limit
     );
-    allBuckets.push(...buckets);
+    allBuckets.push(...buckets.map(enhanceBucket));
     offset += limit;
     moreExist = hasMore;
   }
@@ -30,7 +54,6 @@ export const bucketsData = ${JSON.stringify(
 
   fs.writeFileSync(path.resolve("./bucketsData.js"), jsModuleString);
   console.log("✅ Buckets saved as bucketsData.js");
-  console.log(allBuckets);
 }
 
 preloadAllBuckets();

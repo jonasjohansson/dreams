@@ -1,5 +1,4 @@
 import { allBuckets, getOffset } from "./state.js";
-import { calculateFundingStats } from "./domHelpers.js";
 import { renderBuckets } from "./renderBuckets.js";
 
 export function sortBuckets(event) {
@@ -59,13 +58,10 @@ let compareStringsAscOrder = function (a, b) {
   return 0;
 };
 let compareFundPercentAscOrder = function (a, b) {
-  return a.percentageFunded - b.percentageFunded;
+  return a.percentageFundedTrue - b.percentageFundedTrue;
 };
 let compareFundAscOrder = function (a, b) {
-  return (
-    (a.percentageFunded / 100) * (a.minGoal / 100) -
-    (b.percentageFunded / 100) * (b.minGoal / 100)
-  );
+  return a.percentageFunded * a.minGoal - b.percentageFunded * b.minGoal;
 };
 let compareBudgetMinAscOrder = function (a, b) {
   return a.minGoal - b.minGoal;

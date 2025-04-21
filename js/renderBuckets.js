@@ -1,9 +1,5 @@
 // import { handleSearch } from "./handleSearch.js";
-import {
-  removeEmojis,
-  cleanCustomFieldValue,
-  calculateFundingStats,
-} from "./domHelpers.js";
+import { removeEmojis, cleanCustomFieldValue } from "./domHelpers.js";
 import { renderRatingUI, getRating } from "./rating.js";
 import { DREAMS_URL } from "./config.js";
 
@@ -20,6 +16,8 @@ export function renderBuckets(bucketsToRender) {
       noOfFunders,
       noOfComments,
       percentageFunded,
+      percentageFundedTrue,
+      funded,
       income,
       minGoal,
       maxGoal,
@@ -54,13 +52,6 @@ export function renderBuckets(bucketsToRender) {
 
     const cleanTitle = removeEmojis(title || "");
     const cleanSummary = removeEmojis(summary || "");
-    const { funded, percentageFundedTrue, minCents, maxCents } =
-      calculateFundingStats({
-        income,
-        minGoal,
-        maxGoal,
-        percentageFunded,
-      });
     const ratingUI = renderRatingUI(id, 0);
 
     div.innerHTML = `
@@ -91,8 +82,8 @@ export function renderBuckets(bucketsToRender) {
           <p>${percentageFundedTrue}%</p>
         </div>
         <div class="goals">
-          <p><strong>Min Goal:</strong> ${minCents}</p>
-          <p><strong>Max Goal:</strong> ${maxCents}</p>
+          <p><strong>Min Goal:</strong> ${minGoal}</p>
+          <p><strong>Max Goal:</strong> ${maxGoal}</p>
         </div>
       </footer>
     `;
