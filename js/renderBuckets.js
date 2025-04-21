@@ -61,7 +61,7 @@ export function renderBuckets(bucketsToRender) {
 
     div.innerHTML = `
       <header>
-        <h3><a href="${urlBase}/${id}">${cleanTitle}</a></h3>
+        <h3><a href="${urlBase}/${id}" target="_blank">${cleanTitle}</a></h3>
         <div class="rating-placeholder"></div>
       </header>
       <main>
