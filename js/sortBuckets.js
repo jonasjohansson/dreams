@@ -3,7 +3,6 @@ import { renderBuckets } from "./renderBuckets.js";
 
 export function sortBuckets(event) {
   let sortedBuckets = [...allBuckets];
-  console.log(sortedBuckets);
   switch (event.target.value) {
     case "name-asc":
       sortedBuckets.sort(compareStringsAscOrder);
