@@ -72,7 +72,7 @@ export function renderBuckets(bucketsToRender) {
         </div>
         ${imagesHTML}
       </main>
-      <footer style="display:none">
+      <footer>
         <p class="funders-comments">
           <span class="icon funder-icon">💰</span>
           <span><strong>${noOfFunders}</strong> Funders</span>
