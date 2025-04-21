@@ -10,6 +10,7 @@ export async function fetchDreams(chunkSize = 27, delay = 500) {
   try {
     // 🌀 Shuffle buckets before rendering
     const buckets = shuffleArray([...bucketsData.buckets]);
+    allBuckets.push(...buckets);
 
     if (!buckets.length) {
       setLoadingMessage("No dreams found.");
@@ -17,10 +18,8 @@ export async function fetchDreams(chunkSize = 27, delay = 500) {
       return;
     }
 
-    const total = buckets.length;
-
     // Staggered rendering
-    for (let i = 0; i < total; i += chunkSize) {
+    for (let i = 0; i < buckets.length; i += chunkSize) {
       const chunk = buckets.slice(i, i + chunkSize);
       renderBuckets(chunk);
 

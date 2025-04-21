@@ -82,10 +82,20 @@
         ★</label
       >
     </div>
-    <sl-select placeholder="Sort by">
-      <sl-option value="option-1">Option 1</sl-option>
-      <sl-option value="option-2">Option 2</sl-option>
-      <sl-option value="option-3">Option 3</sl-option>
+    <sl-select id="sort-buckets" value="random" placeholder="Sort by">
+      <sl-option value="random">Random</sl-option>
+      <!-- <sl-option value="rating-asc">Rating 1-5</sl-option> -->
+      <!-- <sl-option value="rating-desc">Rating 5-1</sl-option> -->
+      <sl-option value="name-asc">Dream name A-Z</sl-option>
+      <sl-option value="name-desc">Dream name Z-A</sl-option>
+      <sl-option value="fund-percent-asc">Least funded %</sl-option>
+      <sl-option value="fund-percent-desc">Most funded %</sl-option>
+      <!-- <sl-option value="fund-asc">Least funded SEK</sl-option> -->
+      <!-- <sl-option value="fund-desc">Most funded SEK</sl-option> -->
+      <sl-option value="budget-min-asc">Smallest (min) budget</sl-option>
+      <sl-option value="budget-min-desc">Biggest (min) budget</sl-option>
+      <sl-option value="budget-max-asc">Smallest (max) budget</sl-option>
+      <sl-option value="budget-max-desc">Biggest (max) budget</sl-option>
     </sl-select>
     <div id="buckets-list"></div>
   </body>
