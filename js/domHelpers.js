@@ -30,3 +30,19 @@ export function cleanCustomFieldValue(value) {
   //}
   return value;
 }
+
+export function calculateFundingStats({
+  income,
+  minGoal,
+  maxGoal,
+  percentageFunded,
+}) {
+  const incomeCents = income / 100;
+  const minCents = minGoal / 100;
+  const maxCents = maxGoal / 100;
+
+  const funded = Math.round(minCents * (percentageFunded / 100) - incomeCents);
+  const percentageFundedTrue = ((funded / minCents) * 100).toFixed(2);
+
+  return { funded, percentageFundedTrue, minCents, maxCents };
+}

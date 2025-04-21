@@ -1,12 +1,10 @@
-import {
-  allBuckets,
-  getOffset
-} from "./state.js";
+import { allBuckets, getOffset } from "./state.js";
+import { calculateFundingStats } from "./domHelpers.js";
 import { renderBuckets } from "./renderBuckets.js";
 
 export function sortBuckets(event) {
   let sortedBuckets = [...allBuckets];
-
+  console.log(sortedBuckets);
   switch (event.target.value) {
     case "name-asc":
       sortedBuckets.sort(compareStringsAscOrder);
@@ -44,7 +42,7 @@ export function sortBuckets(event) {
   const list = document.getElementById("buckets-list");
   list.innerHTML = "";
 
-  const chunkSize = 27;//getOffset();
+  const chunkSize = 27; //getOffset();
   for (let i = 0; i < sortedBuckets.length; i += chunkSize) {
     const chunk = sortedBuckets.slice(i, i + chunkSize);
     renderBuckets(chunk);
@@ -59,16 +57,19 @@ let compareStringsAscOrder = function (a, b) {
     return 1;
   }
   return 0;
-}
+};
 let compareFundPercentAscOrder = function (a, b) {
   return a.percentageFunded - b.percentageFunded;
-}
+};
 let compareFundAscOrder = function (a, b) {
-  return ((a.percentageFunded/100) * (a.minGoal/100)) - ((b.percentageFunded/100) * (b.minGoal/100));
-}
+  return (
+    (a.percentageFunded / 100) * (a.minGoal / 100) -
+    (b.percentageFunded / 100) * (b.minGoal / 100)
+  );
+};
 let compareBudgetMinAscOrder = function (a, b) {
   return a.minGoal - b.minGoal;
-}
+};
 let compareBudgetMaxAscOrder = function (a, b) {
   return a.maxGoal - b.maxGoal;
-}
+};

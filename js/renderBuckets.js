@@ -1,5 +1,9 @@
-import { handleSearch } from "./handleSearch.js";
-import { removeEmojis, cleanCustomFieldValue } from "./domHelpers.js";
+// import { handleSearch } from "./handleSearch.js";
+import {
+  removeEmojis,
+  cleanCustomFieldValue,
+  calculateFundingStats,
+} from "./domHelpers.js";
 import { renderRatingUI, getRating } from "./rating.js";
 import { DREAMS_URL } from "./config.js";
 
@@ -50,13 +54,13 @@ export function renderBuckets(bucketsToRender) {
 
     const cleanTitle = removeEmojis(title || "");
     const cleanSummary = removeEmojis(summary || "");
-    const incomeCents = income / 100;
-    const minCents = minGoal / 100;
-    const maxCents = maxGoal / 100;
-    const funded = Math.round(
-      minCents * (percentageFunded / 100) - incomeCents
-    );
-    const percentageFunded2 = ((funded / minCents) * 100).toFixed(2);
+    const { funded, percentageFundedTrue, minCents, maxCents } =
+      calculateFundingStats({
+        income,
+        minGoal,
+        maxGoal,
+        percentageFunded,
+      });
     const ratingUI = renderRatingUI(id, 0);
 
     div.innerHTML = `
@@ -82,9 +86,9 @@ export function renderBuckets(bucketsToRender) {
         <div class="progress-bar-container">
           <p><strong>Percentage Funded:</strong></p>
           <div class="progress-bar">
-            <div class="progress" style="width: ${percentageFunded2}%"></div>
+            <div class="progress" style="width: ${percentageFundedTrue}%"></div>
           </div>
-          <p>${percentageFunded2}%</p>
+          <p>${percentageFundedTrue}%</p>
         </div>
         <div class="goals">
           <p><strong>Min Goal:</strong> ${minCents}</p>
