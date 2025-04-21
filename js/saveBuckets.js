@@ -30,6 +30,7 @@ export const bucketsData = ${JSON.stringify(
 
   fs.writeFileSync(path.resolve("./bucketsData.js"), jsModuleString);
   console.log("✅ Buckets saved as bucketsData.js");
+  console.log(allBuckets);
 }
 
 preloadAllBuckets();
