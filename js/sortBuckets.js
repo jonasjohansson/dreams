@@ -1,5 +1,6 @@
 import { allBuckets, getOffset } from "./state.js";
 import { renderBuckets } from "./renderBuckets.js";
+import { getAllRatings } from "./rating.js";
 
 export function sortBuckets(event) {
   let sortedBuckets = [...allBuckets];
@@ -34,6 +35,12 @@ export function sortBuckets(event) {
     case "budget-max-desc":
       sortedBuckets.sort(compareBudgetMaxAscOrder).reverse();
       break;
+    case "rating-asc":
+      sortByRating(sortedBuckets, getAllRatings(), true);
+      break;
+    case "rating-desc":
+      sortByRating(sortedBuckets, getAllRatings());
+      break;
     default: // Random
       break;
   }
@@ -67,4 +74,32 @@ let compareBudgetMinAscOrder = function (a, b) {
 };
 let compareBudgetMaxAscOrder = function (a, b) {
   return a.maxGoal - b.maxGoal;
+};
+let sortByRating = function (allDreams, ratings, ascOrder = false) {
+  // Loop through the ratings 1-5 and add them to the start of the array
+  // magically dreams with rating 5 will be added lastly to the start (making them first)
+
+  let findDreamsAndMove = function (allDreams, currentRatingValue) {
+    let dreams = ratings.filter(r => r.rating === currentRatingValue);
+    for (let i = 0; i < dreams.length; i++) {
+      allDreams.moveToStart(allDreams.findIndex(d => d.id === dreams[i].bucketId));
+    }
+  };
+
+  if (ascOrder) {
+    for (let currentRatingValue = 5; currentRatingValue > 0; currentRatingValue--) {
+      findDreamsAndMove(allDreams, currentRatingValue);
+    }
+  }
+  else {
+    for (let currentRatingValue = 1; currentRatingValue < 6; currentRatingValue++) {
+      findDreamsAndMove(allDreams, currentRatingValue);
+    }
+  }
+};
+
+Array.prototype.moveToStart = function (from) {
+  let itemToMove = this.splice(from, 1)[0];
+  this.unshift(itemToMove);
+  return this;
 };
