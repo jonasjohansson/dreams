@@ -1,5 +1,7 @@
+const ratingKeyword = "rating"
+
 export function renderRatingUI(bucketId, existingRating = 0) {
-  const savedRating = localStorage.getItem(`rating-${bucketId}`);
+  const savedRating = localStorage.getItem(`${ratingKeyword}${bucketId}`);
   let currentRating = savedRating ? parseInt(savedRating, 10) : existingRating;
 
   const wrapper = document.createElement("div");
@@ -21,11 +23,11 @@ export function renderRatingUI(bucketId, existingRating = 0) {
       const newRating = parseInt(star.dataset.value, 10);
       if (newRating === currentRating) {
         // Clicking the same rating again -> remove it
-        localStorage.removeItem(`rating-${bucketId}`);
+        localStorage.removeItem(`${ratingKeyword}${bucketId}`);
         currentRating = 0;
       } else {
         // Set new rating
-        localStorage.setItem(`rating-${bucketId}`, newRating);
+        localStorage.setItem(`${ratingKeyword}${bucketId}`, newRating);
         currentRating = newRating;
       }
 
@@ -45,7 +47,7 @@ export function renderRatingUI(bucketId, existingRating = 0) {
 }
 
 export function getRating(bucketId) {
-  const rating = localStorage.getItem(`rating-${bucketId}`);
+  const rating = localStorage.getItem(`${ratingKeyword}${bucketId}`);
   return rating === null ? 0 : parseInt(rating, 10);
 }
 
@@ -63,4 +65,20 @@ export function initRatingFilter() {
       });
     });
   });
+}
+
+export function getAllRatings() {
+  let ratingsfromLocalStorage = Object.fromEntries(
+    Object.entries(localStorage).filter(
+       ([key, val])=>key.startsWith("rating")
+    )
+ );
+  let ratings = Object.entries(ratingsfromLocalStorage).map(([key, val]) => {
+    return {
+      bucketId: key.replace(ratingKeyword, ""),
+      rating: parseInt(val),
+    };
+  });
+
+  return ratings;
 }
