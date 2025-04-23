@@ -3,43 +3,49 @@ import { renderBuckets } from "./renderBuckets.js";
 import { getAllRatings } from "./rating.js";
 
 export function sortBuckets(event) {
-  let sortedBuckets = [...allBuckets];
+  const visibleBuckets = document.querySelectorAll(".bucket:not(.hidden)");
+  let bucketList = allBuckets.filter(bucket => {
+    return Array.from(visibleBuckets).some(visibleBucket => {
+      return visibleBucket.dataset.bucketId === bucket.id;
+    });
+  });
+  
   switch (event.target.value) {
     case "name-asc":
-      sortedBuckets.sort(compareStringsAscOrder);
+      bucketList.sort(compareStringsAscOrder);
       break;
     case "name-desc":
-      sortedBuckets.sort(compareStringsAscOrder).reverse();
+      bucketList.sort(compareStringsAscOrder).reverse();
       break;
     case "fund-percent-asc":
-      sortedBuckets.sort(compareFundPercentAscOrder);
+      bucketList.sort(compareFundPercentAscOrder);
       break;
     case "fund-percent-desc":
-      sortedBuckets.sort(compareFundPercentAscOrder).reverse();
+      bucketList.sort(compareFundPercentAscOrder).reverse();
       break;
     case "fund-asc":
-      sortedBuckets.sort(compareFundAscOrder);
+      bucketList.sort(compareFundAscOrder);
       break;
     case "fund-desc":
-      sortedBuckets.sort(compareFundAscOrder).reverse();
+      bucketList.sort(compareFundAscOrder).reverse();
       break;
     case "budget-min-asc":
-      sortedBuckets.sort(compareBudgetMinAscOrder);
+      bucketList.sort(compareBudgetMinAscOrder);
       break;
     case "budget-min-desc":
-      sortedBuckets.sort(compareBudgetMinAscOrder).reverse();
+      bucketList.sort(compareBudgetMinAscOrder).reverse();
       break;
     case "budget-max-asc":
-      sortedBuckets.sort(compareBudgetMaxAscOrder);
+      bucketList.sort(compareBudgetMaxAscOrder);
       break;
     case "budget-max-desc":
-      sortedBuckets.sort(compareBudgetMaxAscOrder).reverse();
+      bucketList.sort(compareBudgetMaxAscOrder).reverse();
       break;
     case "rating-asc":
-      sortByRating(sortedBuckets, getAllRatings(), true);
+      sortByRating(bucketList, getAllRatings(), true);
       break;
     case "rating-desc":
-      sortByRating(sortedBuckets, getAllRatings());
+      sortByRating(bucketList, getAllRatings());
       break;
     default: // Random
       break;
@@ -48,8 +54,8 @@ export function sortBuckets(event) {
   list.innerHTML = "";
 
   const chunkSize = 27; //getOffset();
-  for (let i = 0; i < sortedBuckets.length; i += chunkSize) {
-    const chunk = sortedBuckets.slice(i, i + chunkSize);
+  for (let i = 0; i < bucketList.length; i += chunkSize) {
+    const chunk = bucketList.slice(i, i + chunkSize);
     renderBuckets(chunk);
   }
 }

@@ -28,6 +28,7 @@ export function renderBuckets(bucketsToRender) {
     const div = document.createElement("div");
     div.className = "bucket";
     div.dataset.rating = getRating(id);
+    div.dataset.bucketId = id;
 
     const customFieldsHTML = customFields
       .filter(
@@ -90,10 +91,6 @@ export function renderBuckets(bucketsToRender) {
 
     div.querySelector(".rating-placeholder").appendChild(ratingUI);
     fragment.appendChild(div);
-
-    setTimeout(() => {
-      div.style.opacity = 1;
-    }, 50 * index);
   });
 
   list.appendChild(fragment);
