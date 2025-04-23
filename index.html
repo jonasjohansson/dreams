@@ -1,102 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Marbled Dragon Dinner</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <script type="module" src="js/script.js"></script>
-    <!-- Shoelace UI components-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
-    />
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"
-    ></script>
-  </head>
-  <body class="rating-unrated rating-1 rating-2 rating-3 rating-4 rating-5">
-    <h1>Marbled Dragon Dinner</h1>
-    <p class="loading">Loading...</p>
-    <br />
-    <sl-input
-      style="display: none"
-      type="text"
-      id="search-bar"
-      placeholder="Search dreams..."
-    ></sl-input>
-    <div class="rating-filter" style="padding: 1rem; text-align: center">
-      <label
-        ><input
-          type="checkbox"
-          checked
-          class="rating-checkbox"
-          data-rating="unrated"
-        />
-        Unrated</label
-      >
-      <label
-        ><input
-          type="checkbox"
-          checked
-          class="rating-checkbox"
-          data-rating="1"
-        />
-        ★</label
-      >
-      <label
-        ><input
-          type="checkbox"
-          checked
-          class="rating-checkbox"
-          data-rating="2"
-        />
-        ★</label
-      >
-      <label
-        ><input
-          type="checkbox"
-          checked
-          class="rating-checkbox"
-          data-rating="3"
-        />
-        ★</label
-      >
-      <label
-        ><input
-          type="checkbox"
-          checked
-          class="rating-checkbox"
-          data-rating="4"
-        />
-        ★</label
-      >
-      <label
-        ><input
-          type="checkbox"
-          checked
-          class="rating-checkbox"
-          data-rating="5"
-        />
-        ★</label
-      >
-    </div>
-    <sl-select id="sort-buckets" value="random" placeholder="Sort by">
-      <sl-option value="random">Random</sl-option>
-      <sl-option value="rating-asc">Rating 1-5</sl-option>
-      <sl-option value="rating-desc">Rating 5-1</sl-option>
-      <sl-option value="name-asc">Dream name A-Z</sl-option>
-      <sl-option value="name-desc">Dream name Z-A</sl-option>
-      <sl-option value="fund-percent-asc">Least funded %</sl-option>
-      <sl-option value="fund-percent-desc">Most funded %</sl-option>
-      <sl-option value="fund-asc">Least funded SEK</sl-option>
-      <sl-option value="fund-desc">Most funded SEK</sl-option>
-      <sl-option value="budget-min-asc">Smallest (min) budget</sl-option>
-      <sl-option value="budget-min-desc">Biggest (min) budget</sl-option>
-      <sl-option value="budget-max-asc">Smallest (max) budget</sl-option>
-      <sl-option value="budget-max-desc">Biggest (max) budget</sl-option>
-    </sl-select>
-    <div id="buckets-list"></div>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marbled Dragon Dinner</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/script.js"></script>
+  <!-- Shoelace UI components-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+</head>
+
+<body class="rating-unrated rating-1 rating-2 rating-3 rating-4 rating-5">
+  <h1>Marbled Dragon Dinner</h1>
+  <p class="loading">Loading...</p>
+  <br />
+  <sl-input type="text" id="search-bar" placeholder="Search dreams..."></sl-input>
+  <div class="rating-filter" style="padding: 1rem; text-align: center">
+    <label>
+      <input type="checkbox" checked class="rating-checkbox" data-rating="unrated" />
+      Unrated
+    </label>
+    <label>
+      <input type="checkbox" checked class="rating-checkbox" data-rating="1" />
+      ★
+    </label>
+    <label>
+      <input type="checkbox" checked class="rating-checkbox" data-rating="2" />
+      ★
+    </label>
+    <label>
+      <input type="checkbox" checked class="rating-checkbox" data-rating="3" />
+      ★
+    </label>
+    <label>
+      <input type="checkbox" checked class="rating-checkbox" data-rating="4" />
+      ★
+    </label>
+    <label>
+      <input type="checkbox" checked class="rating-checkbox" data-rating="5" />
+      ★
+    </label>
+  </div>
+  <sl-select id="sort-buckets" value="random" placeholder="Sort by">
+    <sl-option value="random">Random</sl-option>
+    <sl-option value="rating-asc">Rating 1-5</sl-option>
+    <sl-option value="rating-desc">Rating 5-1</sl-option>
+    <sl-option value="name-asc">Dream name A-Z</sl-option>
+    <sl-option value="name-desc">Dream name Z-A</sl-option>
+    <sl-option value="fund-percent-asc">Least funded %</sl-option>
+    <sl-option value="fund-percent-desc">Most funded %</sl-option>
+    <sl-option value="fund-asc">Least funded SEK</sl-option>
+    <sl-option value="fund-desc">Most funded SEK</sl-option>
+    <sl-option value="budget-min-asc">Smallest (min) budget</sl-option>
+    <sl-option value="budget-min-desc">Biggest (min) budget</sl-option>
+    <sl-option value="budget-max-asc">Smallest (max) budget</sl-option>
+    <sl-option value="budget-max-desc">Biggest (max) budget</sl-option>
+  </sl-select>
+  <div id="buckets-list"></div>
+</body>
+
 </html>

@@ -46,7 +46,7 @@ export function renderBuckets(bucketsToRender) {
       images.length > 1
         ? images
             .slice(1)
-            .map((img) => `<img src="${img.small}" alt="${title} image" />`)
+            .map((img) => `<img loading="lazy" src="${img.small}" alt="${title} image" />`)
             .join("")
         : "";
 
