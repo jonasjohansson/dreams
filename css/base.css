@@ -39,5 +39,6 @@ p:not(:last-child) {
 
 h1 {
   text-align: center;
-  margin-top: 2rem;
+  margin: revert;
+  font-size: revert;
 }

@@ -5,7 +5,7 @@ export function setLoadingMessage(msg) {
 
 export function hideLoading() {
   const loadingEl = document.querySelector(".loading");
-  if (loadingEl) loadingEl.style.display = "none";
+  if (loadingEl) loadingEl.classList.add("hidden");
 }
 
 // Simple Fisher-Yates shuffle
