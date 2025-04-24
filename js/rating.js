@@ -1,56 +1,43 @@
-const ratingKeyword = "rating"
-
-export function renderRatingUI(bucketId, existingRating = 0) {
-  const savedRating = localStorage.getItem(`${ratingKeyword}${bucketId}`);
-  let currentRating = savedRating ? parseInt(savedRating, 10) : existingRating;
-
-  const wrapper = document.createElement("div");
-  const starContainer = document.createElement("div");
-  starContainer.className = "stars";
-  wrapper.setAttribute("data-rating", currentRating);
-
-  for (let i = 1; i <= 5; i++) {
-    const star = document.createElement("span");
-    star.className = "star";
-    star.innerHTML = "★";
-    star.dataset.value = i;
-
-    if (i <= currentRating) {
-      star.classList.add("rated");
-    }
-
-    star.addEventListener("click", () => {
-      const newRating = parseInt(star.dataset.value, 10);
-      if (newRating === currentRating) {
-        // Clicking the same rating again -> remove it
-        localStorage.removeItem(`${ratingKeyword}${bucketId}`);
-        currentRating = 0;
-      } else {
-        // Set new rating
-        localStorage.setItem(`${ratingKeyword}${bucketId}`, newRating);
-        currentRating = newRating;
-      }
-
-      wrapper.setAttribute("data-rating", currentRating);
-
-      // Update star UI
-      starContainer.querySelectorAll(".star").forEach((s, index) => {
-        s.classList.toggle("rated", index < currentRating);
-      });
-    });
-
-    starContainer.appendChild(star);
+export class Rating {
+  constructor() {
+    this.ratingKeyword = "rating-";
   }
 
-  wrapper.appendChild(starContainer);
-  return wrapper;
+  set(rating, bucketId) {
+    if (rating === 0) {
+      localStorage.removeItem(`${this.ratingKeyword}${bucketId}`);
+    } else {
+      localStorage.setItem(`${this.ratingKeyword}${bucketId}`, rating);
+    }
+  }
+
+  get(bucketId) {
+    const rating = localStorage.getItem(`${this.ratingKeyword}${bucketId}`);
+    return rating === null ? 0 : parseInt(rating, 10);
+  }
+
+  getAllRatings() {
+    let ratingsfromLocalStorage = Object.fromEntries(
+      Object.entries(localStorage).filter(
+         ([key, val])=>key.startsWith(this.ratingKeyword)
+      )
+   );
+    let ratings = Object.entries(ratingsfromLocalStorage).map(([key, val]) => {
+      return {
+        bucketId: key.replace(this.ratingKeyword, ""),
+        rating: parseInt(val),
+      };
+    });
+  
+    return ratings;
+  }
 }
 
-export function getRating(bucketId) {
-  const rating = localStorage.getItem(`${ratingKeyword}${bucketId}`);
-  return rating === null ? 0 : parseInt(rating, 10);
-}
 
+/**
+ * This function sets up event listeners for the checkboxes
+ * and updates the body class based on the selected ratings.
+ */
 export function initRatingFilter() {
   const checkboxes = document.querySelectorAll(".rating-checkbox");
   checkboxes.forEach((checkbox) => {
@@ -65,20 +52,4 @@ export function initRatingFilter() {
       });
     });
   });
-}
-
-export function getAllRatings() {
-  let ratingsfromLocalStorage = Object.fromEntries(
-    Object.entries(localStorage).filter(
-       ([key, val])=>key.startsWith("rating")
-    )
- );
-  let ratings = Object.entries(ratingsfromLocalStorage).map(([key, val]) => {
-    return {
-      bucketId: key.replace(ratingKeyword, ""),
-      rating: parseInt(val),
-    };
-  });
-
-  return ratings;
 }

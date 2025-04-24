@@ -3,12 +3,12 @@
   display: none;
 }
 
-body.rating-1 .bucket:has([data-rating="1"]),
-body.rating-2 .bucket:has([data-rating="2"]),
-body.rating-3 .bucket:has([data-rating="3"]),
-body.rating-4 .bucket:has([data-rating="4"]),
-body.rating-5 .bucket:has([data-rating="5"]),
-body.rating-unrated .bucket:has([data-rating="0"]) {
+body.rating-1 .bucket[data-rating="1"],
+body.rating-2 .bucket[data-rating="2"],
+body.rating-3 .bucket[data-rating="3"],
+body.rating-4 .bucket[data-rating="4"],
+body.rating-5 .bucket[data-rating="5"],
+body.rating-unrated .bucket[data-rating="0"] {
   display: block;
 }
 
@@ -17,29 +17,6 @@ body.rating-unrated .bucket:has([data-rating="0"]) {
   display: block;
 }
 
-.rating-wrapper {
-  font-size: 1em;
-}
-.stars {
-  display: flex;
-  gap: 5px;
-  cursor: pointer;
-}
-.star {
-  font-size: 1.5em;
-  color: #ccc;
-  transition: color 0.2s;
-}
-.star.rated {
-  color: gold;
-}
-
-input[type="radio"]:checked ~ label.star,
-input[type="radio"]:checked ~ label.star ~ label.star {
-  color: gold;
-}
-
-input[type="radio"]:not(:checked) ~ label.star:hover,
-label.star:hover {
-  color: #ffcc00;
+.rating {
+  --symbol-size: 14px;
 }

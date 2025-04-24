@@ -1,8 +1,9 @@
 import { allBuckets, getOffset } from "./state.js";
 import { renderBuckets } from "./renderBuckets.js";
-import { getAllRatings } from "./rating.js";
+import { Rating } from "./rating.js";
 
 export function sortBuckets(event) {
+  const rating = new Rating();
   const visibleBuckets = document.querySelectorAll(".bucket:not(.hidden)");
   let bucketList = allBuckets.filter(bucket => {
     return Array.from(visibleBuckets).some(visibleBucket => {
@@ -42,10 +43,10 @@ export function sortBuckets(event) {
       bucketList.sort(compareBudgetMaxAscOrder).reverse();
       break;
     case "rating-asc":
-      sortByRating(bucketList, getAllRatings(), true);
+      sortByRating(bucketList, rating.getAllRatings(), true);
       break;
     case "rating-desc":
-      sortByRating(bucketList, getAllRatings());
+      sortByRating(bucketList, rating.getAllRatings());
       break;
     default: // Random
       break;

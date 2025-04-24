@@ -1,16 +1,17 @@
 // import { handleSearch } from "./handleSearch.js";
 import { removeEmojis, cleanCustomFieldValue } from "./domHelpers.js";
-import { renderRatingUI, getRating } from "./rating.js";
+import { Rating } from "./rating.js";
 import { DREAMS_URL } from "./config.js";
 
 export function renderBuckets(bucketsToRender) {
   const list = document.getElementById("buckets-list");
   const urlBase = DREAMS_URL;
   const fragment = document.createDocumentFragment();
+  const rating = new Rating();
 
   bucketsToRender.forEach((bucket, index) => {
     const {
-      id,
+      id: bucketId,
       title,
       summary,
       noOfFunders,
@@ -25,10 +26,12 @@ export function renderBuckets(bucketsToRender) {
       customFields,
     } = bucket;
 
+    const ratingValue = rating.get(bucketId);
+
     const div = document.createElement("div");
     div.className = "bucket";
-    div.dataset.rating = getRating(id);
-    div.dataset.bucketId = id;
+    div.dataset.rating = ratingValue;
+    div.dataset.bucketId = bucketId;
 
     const customFieldsHTML = customFields
       .filter(
@@ -53,12 +56,11 @@ export function renderBuckets(bucketsToRender) {
 
     const cleanTitle = removeEmojis(title || "");
     const cleanSummary = removeEmojis(summary || "");
-    const ratingUI = renderRatingUI(id, 0);
 
     div.innerHTML = `
       <header>
-        <h3><a href="${urlBase}/${id}" target="_blank">${cleanTitle}</a></h3>
-        <div class="rating-placeholder"></div>
+        <h3><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h3>
+        <sl-rating class="rating" label="Rating" value="${ratingValue}"></sl-rating>
       </header>
       <main>
         <img class="cover" src="${coverImage}">
@@ -89,7 +91,12 @@ export function renderBuckets(bucketsToRender) {
       </footer>
     `;
 
-    div.querySelector(".rating-placeholder").appendChild(ratingUI);
+    div.querySelector(".rating").addEventListener("sl-change", (e) => {
+      const newRating = e.target.value;
+      rating.set(newRating, bucketId);
+      div.dataset.rating = newRating;
+    });
+
     fragment.appendChild(div);
   });
 
