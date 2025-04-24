@@ -79,7 +79,7 @@ export function renderBuckets(bucketsToRender) {
         </p>
         <div class="progress-bar-container">
           <strong>Percentage Funded:</strong>
-          <sl-progress-bar value="${percentageFundedTrue}">
+          <sl-progress-bar value="${percentageFundedTrue > 100 ? 100 : percentageFundedTrue}">
             ${percentageFundedTrue}%
           </sl-progress-bar>
         </div>
