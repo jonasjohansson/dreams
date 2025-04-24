@@ -78,15 +78,14 @@ export function renderBuckets(bucketsToRender) {
           <span><strong>${noOfComments}</strong> Comments</span>
         </p>
         <div class="progress-bar-container">
-          <p><strong>Percentage Funded:</strong></p>
-          <div class="progress-bar">
-            <div class="progress" style="width: ${percentageFundedTrue}%"></div>
-          </div>
-          <p>${percentageFundedTrue}%</p>
+          <strong>Percentage Funded:</strong>
+          <sl-progress-bar value="${percentageFundedTrue}">
+            ${percentageFundedTrue}%
+          </sl-progress-bar>
         </div>
         <div class="goals">
-          <p><strong>Min Goal:</strong> ${minGoal}</p>
-          <p><strong>Max Goal:</strong> ${maxGoal}</p>
+          <span><strong>Min Goal:</strong> ${minGoal}</span>
+          <span><strong>Max Goal:</strong> ${maxGoal}</span>
         </div>
       </footer>
     `;

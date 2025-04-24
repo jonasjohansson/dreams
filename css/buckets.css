@@ -34,7 +34,6 @@
   align-items: center;
   gap: 15px;
   font-size: 14px;
-  margin: 10px 0;
 }
 
 img.cover {
@@ -49,40 +48,22 @@ img.cover {
 }
 
 .progress-bar-container {
-  margin: 15px 0;
+  font-size: 12px;
 }
 
-.progress-bar {
-  background-color: #e0e0e0;
-  width: 100%;
-  height: 10px;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 5px;
-}
-
-.progress {
-  height: 100%;
-  background-color: #4caf50;
-  border-radius: 5px;
+sl-progress-bar {
+  --track-color: #e0e0e0;
+  --indicator-color	: #4caf50;
+  margin-top: 5px;;
 }
 
 .goals {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 10px;
 }
 
 strong {
   font-weight: bold;
-}
-
-.goal p {
-  margin: 0;
-}
-
-.goal span {
-  font-weight: bold;
-  color: #007bff;
 }
