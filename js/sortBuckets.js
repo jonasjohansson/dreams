@@ -5,12 +5,12 @@ import { Rating } from "./rating.js";
 export function sortBuckets(event) {
   const rating = new Rating();
   const visibleBuckets = document.querySelectorAll(".bucket:not(.hidden)");
-  let bucketList = allBuckets.filter(bucket => {
-    return Array.from(visibleBuckets).some(visibleBucket => {
+  let bucketList = allBuckets.filter((bucket) => {
+    return Array.from(visibleBuckets).some((visibleBucket) => {
       return visibleBucket.dataset.bucketId === bucket.id;
     });
   });
-  
+
   switch (event.target.value) {
     case "name-asc":
       bucketList.sort(compareStringsAscOrder);
@@ -29,6 +29,18 @@ export function sortBuckets(event) {
       break;
     case "fund-desc":
       bucketList.sort(compareFundAscOrder).reverse();
+      break;
+    case "funders-asc":
+      bucketList.sort(compareFundersAscOrder);
+      break;
+    case "funders-desc":
+      bucketList.sort(compareFundersAscOrder).reverse();
+      break;
+    case "comments-asc":
+      bucketList.sort(compareCommentsAscOrder);
+      break;
+    case "comments-desc":
+      bucketList.sort(compareCommentsAscOrder).reverse();
       break;
     case "budget-min-asc":
       bucketList.sort(compareBudgetMinAscOrder);
@@ -76,6 +88,12 @@ let compareFundPercentAscOrder = function (a, b) {
 let compareFundAscOrder = function (a, b) {
   return a.percentageFunded * a.minGoal - b.percentageFunded * b.minGoal;
 };
+let compareFundersAscOrder = function (a, b) {
+  return a.noOfFunders - b.noOfFunders;
+};
+let compareCommentsAscOrder = function (a, b) {
+  return a.noOfComments - b.noOfComments;
+};
 let compareBudgetMinAscOrder = function (a, b) {
   return a.minGoal - b.minGoal;
 };
@@ -87,19 +105,28 @@ let sortByRating = function (allDreams, ratings, ascOrder = false) {
   // magically dreams with rating 5 will be added lastly to the start (making them first)
 
   let findDreamsAndMove = function (allDreams, currentRatingValue) {
-    let dreams = ratings.filter(r => r.rating === currentRatingValue);
+    let dreams = ratings.filter((r) => r.rating === currentRatingValue);
     for (let i = 0; i < dreams.length; i++) {
-      allDreams.moveToStart(allDreams.findIndex(d => d.id === dreams[i].bucketId));
+      allDreams.moveToStart(
+        allDreams.findIndex((d) => d.id === dreams[i].bucketId)
+      );
     }
   };
 
   if (ascOrder) {
-    for (let currentRatingValue = 5; currentRatingValue > 0; currentRatingValue--) {
+    for (
+      let currentRatingValue = 5;
+      currentRatingValue > 0;
+      currentRatingValue--
+    ) {
       findDreamsAndMove(allDreams, currentRatingValue);
     }
-  }
-  else {
-    for (let currentRatingValue = 1; currentRatingValue < 6; currentRatingValue++) {
+  } else {
+    for (
+      let currentRatingValue = 1;
+      currentRatingValue < 6;
+      currentRatingValue++
+    ) {
       findDreamsAndMove(allDreams, currentRatingValue);
     }
   }
