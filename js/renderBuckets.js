@@ -81,7 +81,7 @@ export function renderBuckets(bucketsToRender) {
               <span class="icon funder-icon">💰</span>
               <span>${noOfFunders}</span>
               <span class="icon comment-icon">💬</span>
-              <span>${noOfComments}</span>
+              <span><a href="${urlBase}/${bucketId}?tab=comments">${noOfComments}</a></span>
             </p>
           </div>
       </header>
