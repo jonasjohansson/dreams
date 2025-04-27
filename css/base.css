@@ -14,8 +14,10 @@ body {
   font-weight: 300;
 }
 
+h3,
+summary,
 p {
-  font-size: inherit;
+  font-size: 12px;
 }
 
 img {
@@ -40,4 +42,8 @@ h1 {
   text-align: center;
   margin: revert;
   font-size: revert;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

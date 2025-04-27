@@ -50,7 +50,10 @@ export function renderBuckets(bucketsToRender) {
       images.length > 1
         ? images
             .slice(1)
-            .map((img) => `<img loading="lazy" src="${img.small}" alt="${title} image" />`)
+            .map(
+              (img) =>
+                `<img loading="lazy" src="${img.small}" alt="${title} image" />`
+            )
             .join("")
         : "";
 
@@ -59,35 +62,41 @@ export function renderBuckets(bucketsToRender) {
 
     div.innerHTML = `
       <header>
-        <h3><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h3>
-        <sl-rating class="rating" label="Rating" value="${ratingValue}"></sl-rating>
+          <h3><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h3>
+          <div class="info-row">
+            <sl-rating class="rating" label="Rating" value="${ratingValue}"></sl-rating>
+            <div class="goals">
+              <span><strong>Goal:</strong> ${minGoal}–${maxGoal}</span>
+            </div>
+            <p class="funders-comments">
+              <span class="icon funder-icon">💰</span>
+              <span>${noOfFunders}</span>
+              <span class="icon comment-icon">💬</span>
+              <span>${noOfComments}</span>
+            </p>
+          </div>
+          <div class="progress-bar-container">
+            <sl-progress-bar value="${
+              percentageFundedTrue > 100 ? 100 : percentageFundedTrue
+            }">
+              ${percentageFundedTrue}%
+            </sl-progress-bar>
+          </div>
       </header>
       <main>
         <img class="cover" src="${coverImage}">
-        <p>${cleanSummary || "N/A"}</p>
-        <div class="custom-fields">
-          ${customFieldsHTML || "<p>No custom fields found.</p>"}
-        </div>
-        ${imagesHTML}
+        <details>
+          <summary>
+            ${cleanSummary || "N/A"}
+          </summary>
+          <br>
+          <div class="custom-fields">
+            ${customFieldsHTML || "<p>No custom fields found.</p>"}
+          </div>
+          <br>
+          ${imagesHTML}
+        </details>
       </main>
-      <footer>
-        <p class="funders-comments">
-          <span class="icon funder-icon">💰</span>
-          <span><strong>${noOfFunders}</strong> Funders</span>
-          <span class="icon comment-icon">💬</span>
-          <span><strong>${noOfComments}</strong> Comments</span>
-        </p>
-        <div class="progress-bar-container">
-          <strong>Percentage Funded:</strong>
-          <sl-progress-bar value="${percentageFundedTrue > 100 ? 100 : percentageFundedTrue}">
-            ${percentageFundedTrue}%
-          </sl-progress-bar>
-        </div>
-        <div class="goals">
-          <span><strong>Min Goal:</strong> ${minGoal}</span>
-          <span><strong>Max Goal:</strong> ${maxGoal}</span>
-        </div>
-      </footer>
     `;
 
     div.querySelector(".rating").addEventListener("sl-change", (e) => {
