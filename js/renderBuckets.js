@@ -62,11 +62,20 @@ export function renderBuckets(bucketsToRender) {
 
     div.innerHTML = `
       <header>
-          <h3><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h3>
-          <div class="info-row">
+          <div class="title-row">
+            <h3><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h3>
             <sl-rating class="rating" label="Rating" value="${ratingValue}"></sl-rating>
+          </div>
+          <div class="info-row">
             <div class="goals">
               <span><strong>Goal:</strong> ${minGoal}–${maxGoal}</span>
+            </div>
+            <div class="progress-bar-container">
+              <sl-progress-bar value="${
+                percentageFundedTrue > 100 ? 100 : percentageFundedTrue
+              }">
+                <span>${percentageFundedTrue}%</span>
+              </sl-progress-bar>
             </div>
             <p class="funders-comments">
               <span class="icon funder-icon">💰</span>
@@ -74,13 +83,6 @@ export function renderBuckets(bucketsToRender) {
               <span class="icon comment-icon">💬</span>
               <span>${noOfComments}</span>
             </p>
-          </div>
-          <div class="progress-bar-container">
-            <sl-progress-bar value="${
-              percentageFundedTrue > 100 ? 100 : percentageFundedTrue
-            }">
-              ${percentageFundedTrue}%
-            </sl-progress-bar>
           </div>
       </header>
       <main>
