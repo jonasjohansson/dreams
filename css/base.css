@@ -14,7 +14,6 @@ body {
   font-weight: 300;
 }
 
-h3,
 summary,
 p {
   font-size: inherit;
@@ -44,10 +43,10 @@ h1 {
   font-size: revert;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 strong {
   font-weight: bold;
+}
+
+sl-tooltip {
+  --show-delay: 500ms;
 }

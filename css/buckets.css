@@ -11,17 +11,19 @@
   overflow-y: auto;
   font-size: 10px;
 }
+.bucket::-webkit-scrollbar {
+  display: none;
+}
 
 .bucket header > *,
 .bucket main > *:not(:last-child) {
   margin-bottom: 0.5rem;
 }
 
-.bucket h3 {
+.bucket h2 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%; /* Or set a specific pixel width like 300px */
 }
 
 /* Progress & Icons */
@@ -51,7 +53,7 @@ sl-progress-bar::part(indicator) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
 }
 
@@ -65,12 +67,13 @@ sl-progress-bar::part(indicator) {
 .funders-comments {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: inherit;
-  margin: 0;
 }
 
 .progress-bar-container {
   width: 50%;
   font-size: inherit;
+}
+.comment-link {
+  text-decoration: none; 
+  margin-left: 6px;
 }

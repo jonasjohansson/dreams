@@ -63,7 +63,9 @@ export function renderBuckets(bucketsToRender) {
     div.innerHTML = `
       <header>
           <div class="title-row">
-            <h3><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h3>
+          <sl-tooltip content="${cleanTitle}">
+            <h2><a href="${urlBase}/${bucketId}" target="_blank">${cleanTitle}</a></h2>
+          </sl-tooltip>
             <sl-rating class="rating" label="Rating" value="${ratingValue}"></sl-rating>
           </div>
           <div class="info-row">
@@ -80,8 +82,12 @@ export function renderBuckets(bucketsToRender) {
             <p class="funders-comments">
               <span class="icon funder-icon">💰</span>
               <span>${noOfFunders}</span>
-              <span class="icon comment-icon">💬</span>
-              <span><a href="${urlBase}/${bucketId}?tab=comments">${noOfComments}</a></span>
+              <sl-tooltip content="View comments">
+                <a href="${urlBase}/${bucketId}?tab=comments" class="comment-link">
+                  <span class="icon comment-icon">💬</span>
+                  <span>${noOfComments}</span>
+                </a>
+              </sl-tooltip>
             </p>
           </div>
       </header>
